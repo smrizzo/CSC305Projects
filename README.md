@@ -14,9 +14,9 @@ The steps to get set up on github for this class are as follows:
        you can always use the Unix servers, unix1.csc.calpoly.edu through
        unix5.csc.calpoly.edu.
 
-    *  Set up your account on the Unix server for CSC 203.  You do this
+    *  Set up your account on the Unix server for CSC 305.  You do this
        by editing the file ".mybashrc" to include the following:
-            source /home/wffoote/public/set_env_203
+            source /home/wffoote/public/set_env_305
 
     *  Wait for the instructor to invite you to the "Students" team.
        If necessary, remind them, and maybe mention that you should be
@@ -24,7 +24,7 @@ The steps to get set up on github for this class are as follows:
        you'll get an e-mail, and an "accept information" link will be 
        available at the organization homepage.  Accept the invitation.
 
-    *  Go to the organization homepage, https://github.com/CalPolyCPE203-F18 .
+    *  Go to the organization homepage, https://github.com/CalPolyCPE305-F18 .
        Click on "repositories," then "materials."
 
     *  Pick a directory on your computer, or on your account on the Unix
