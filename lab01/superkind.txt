@@ -1,0 +1,65 @@
+﻿Geraldo Macias
+Scott Rizzo
+Super Kind
+
+
+Use Case #1
+Super Kind Store
+Happy Path                                        Alternate Path
+1. William walks into the store                1. William does not walk into the store
+2. William purchases Super Kind        2. William does not buy Super Kind merchandise
+Merchandise.
+     3.        William has no need to purchase        3. William still purchases Super Nice merch
+Super Nice merch from Rude
+Dude.
+
+
+
+
+
+
+Use Case #2
+Super Kind Posters
+Happy Path                                        Alternate Path
+1. William sees Super Kind posters        1. William does not see Super Kind poster
+saying not to support Rude Dude
+      2.   William obeys the poster and         2. William still buys Super Nice merchandise.
+        disregards Rude Dude when
+        approached.
+
+
+
+
+
+
+
+
+Use Case #3
+Busting Rude Dude
+
+
+Happy Path
+1. Rude Dude walks in metro station with Super Nice product
+2. Rude Dude walks towards train
+3. BodyGuard Joe stops Rude Dude at entrance of train
+4. BodyGuard Joe detains Rude Dude
+5. BodyGuard Joe notifies Super Kind girl
+6. Super Kind girl teleports Rude Dude to Moon
+7. Super Kind girl teleports back to Metro Station 
+
+
+
+
+
+
+Use Case #4
+Super Kind Concert
+
+
+Happy Path
+1. Super Kind girl walks onto concerts stage
+2. Super Kind girl performs first song
+3. Play Rude Dude Awareness video
+4. Super King girl performs second song
+5. Super Kind metro store commercial
+6. Super Kind girl performs closing song
