@@ -65,6 +65,10 @@ public class Main {
         window.start();
         while (window.isRunning()) {
             AnimationFrame newFrame = window.waitForNextFrame();
+            if(newFrame == null) {
+                window.stop();
+            }
+
             if(wasClicked) {
                 updateBoard(newFrame);
                 window.showNextFrame();
