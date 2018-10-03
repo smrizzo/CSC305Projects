@@ -12,7 +12,6 @@ public class Main {
 
     public void drawBoard(SpriteWindow window) {
         AnimationFrame frame = window.getInitialFrame();
-        System.out.println("Initialized Board");
         for(int x = 0; x < 8; x++) {
             for(int y = 0; y < 8; y++) {
 
