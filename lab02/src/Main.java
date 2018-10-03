@@ -1,5 +1,7 @@
-import edu.calpoly.spritely.*;
-
+import edu.calpoly.spritely.AnimationFrame;
+import edu.calpoly.spritely.Size;
+import edu.calpoly.spritely.SpriteWindow;
+import edu.calpoly.testy.Testy;
 
 import java.awt.*;
 
@@ -78,7 +80,21 @@ public class Main {
 
 
     public static void main(String[] args) {
-        Main m = new Main();
-        m.runMain();
+        System.out.println(args[0]);
+        if(args[0].equals("test")) {
+            MyTest testObj = new MyTest();
+            Testy.run(
+                    () -> testObj.test1(),
+                    () -> testObj.test2()
+            );
+        } else {
+            Main m = new Main();
+            m.runMain();
+        }
+
+
+
+//        Main m = new Main();
+//        m.runMain();
     }
 }

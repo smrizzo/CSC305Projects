@@ -1,6 +1,5 @@
 import edu.calpoly.spritely.Size;
 import edu.calpoly.spritely.SpriteWindow;
-import edu.calpoly.testy.Testy;
 import edu.calpoly.testy.Assert;
 
 public class MyTest {
@@ -25,18 +24,18 @@ public class MyTest {
         Assert.assertEquals(sizeReturned2.width, 80);
     }
 
-    public void runMain() {
+//    public void runMain() {
+//
+//        final MyTest testObj = new MyTest();
+//        Testy.run(
+//                () -> testObj.test1(),
+//                () -> testObj.test2()
+//        );
+//    }
 
-        final MyTest testObj = new MyTest();
-        Testy.run(
-                () -> testObj.test1(),
-                () -> testObj.test2()
-        );
-    }
-
-    public static void main(String[] args) {
-        MyTest m = new MyTest();
-        m.runMain();
-    }
+//    public static void main(String[] args) {
+//        MyTest m = new MyTest();
+//        m.runMain();
+//    }
 
 }
