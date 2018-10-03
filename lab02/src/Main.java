@@ -1,43 +1,81 @@
 import edu.calpoly.spritely.*;
 
+
 import java.awt.*;
 
+
 public class Main {
-    public static void main(String[] args) {
-        Size windowSize = new Size(8, 8);
-        Size tileSize = new Size(100, 100);
-        SolidColorTile blackTile = new SolidColorTile(Color.BLACK, 'b');
-        SolidColorTile whiteTile = new SolidColorTile(Color.WHITE, 'w');
+    static int width = 8;
+    static int pixelSize = 100;
+    private SolidColorCircle[][] Cells = new SolidColorCircle[width][width];
+    public boolean wasClicked = false;
 
-
-        SpriteWindow window = new SpriteWindow("Window", windowSize);
-        window.setTileSize(tileSize);
+    public void drawBoard(SpriteWindow window) {
         AnimationFrame frame = window.getInitialFrame();
-
-
-
-        System.out.println("Hello World");
+        System.out.println("Initialized Board");
         for(int x = 0; x < 8; x++) {
             for(int y = 0; y < 8; y++) {
-                if((x + y) % 2 == 0) {
-                    frame.addTile(x, y, whiteTile);
-                } else {
-                    frame.addTile(x, y, blackTile);
-                }
-                //window.showNextFrame();
 
+                if((x + y) % 2 == 0) {
+                    Cells[x][y] = new SolidColorCircle(Color.WHITE, 'w', false);
+                    frame.addTile(x, y, Cells[x][y]);
+
+                } else {
+                    Cells[x][y] = new SolidColorCircle(Color.BLACK, 'b', false);
+                    frame.addTile(x, y, Cells[x][y]);
+                }
             }
         }
-        MouseClickedHandler handler = (x, y) -> System.out.println("cliked on tile at: " + x + " and " + y);
-        window.setMouseClickedHandler(handler);
+    }
+
+    public void updateBoard(AnimationFrame frame) {
+
+        for(int x = 0; x < 8; x++) {
+            for(int y = 0; y < 8; y++) {
+                frame.addTile(x, y, Cells[x][y]);
+            }
+        }
+        wasClicked = false;
+    }
+
+    public void setTileClicked(int x, int y) {
+
+        if(Cells[x][y].getText() == 'w' || Cells[x][y].getText() == 'W') {
+            Cells[x][y] = new SolidColorCircle(Color.WHITE, 'W', true);
+        } else {
+            Cells[x][y] = new SolidColorCircle(Color.BLACK, 'B', true);
+        }
+        wasClicked = true;
+
+    }
+
+
+    public void runMain() {
+        Size windowSize = new Size(width, width);
+        Size tileSize = new Size(pixelSize, pixelSize);
+
+        SpriteWindow window = new SpriteWindow("Window", windowSize);
+
+        window.setTileSize(tileSize);
+        drawBoard(window);
+
+
+        window.setMouseClickedHandler((x, y) -> setTileClicked(x, y));
+
 
         window.start();
-        while(window.isRunning()) {
+        while (window.isRunning()) {
             AnimationFrame newFrame = window.waitForNextFrame();
-            
-
+            if(wasClicked) {
+                updateBoard(newFrame);
+                window.showNextFrame();
+            }
         }
+    }
 
 
+    public static void main(String[] args) {
+        Main m = new Main();
+        m.runMain();
     }
 }
