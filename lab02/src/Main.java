@@ -80,21 +80,22 @@ public class Main {
 
 
     public static void main(String[] args) {
-        System.out.println(args[0]);
-        if(args[0].equals("test")) {
-            MyTest testObj = new MyTest();
-            Testy.run(
-                    () -> testObj.test1(),
-                    () -> testObj.test2()
-            );
-        } else {
+        if (args.length == 0) {
             Main m = new Main();
             m.runMain();
+        } else if (args.length > 0) {
+            if (args[0].equals("test")) {
+                MyTest testObj = new MyTest();
+                Testy.run(
+                        () -> testObj.test1(),
+                        () -> testObj.test2()
+                );
+            } else {
+                System.out.println("Error: Please enter no arguments or one that is test");
+                System.exit(0);
+            }
         }
 
 
-
-//        Main m = new Main();
-//        m.runMain();
     }
 }

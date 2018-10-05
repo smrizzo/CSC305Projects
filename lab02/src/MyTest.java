@@ -24,18 +24,4 @@ public class MyTest {
         Assert.assertEquals(sizeReturned2.width, 80);
     }
 
-//    public void runMain() {
-//
-//        final MyTest testObj = new MyTest();
-//        Testy.run(
-//                () -> testObj.test1(),
-//                () -> testObj.test2()
-//        );
-//    }
-
-//    public static void main(String[] args) {
-//        MyTest m = new MyTest();
-//        m.runMain();
-//    }
-
 }
