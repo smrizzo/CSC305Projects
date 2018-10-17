@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>40</y>
+      <w>250</w>
+      <h>330</h>
+    </coordinates>
+    <panel_attributes>/Main/
+
+--
+static width: Int
+static PixelSize: Int
+stopGame: Boolean
+isKibbitzer: Boolean
+numOfKibbitzers: Int
+borderChars[]: Character
+borderNumbers[]: Character
+myCharList: List&lt;Character&gt;
+myNumList: List&lt;Character&gt;
+textMove: ArrayList&lt;Character&gt;
+
+--
+setKeyClick(char): void
+setMouseClick(int, int): void
+usage(): void
+getNumOfKibbitzers(String[]): Int
+draw(): void
+runMain(String[]): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>480</x>
+      <y>40</y>
+      <w>250</w>
+      <h>330</h>
+    </coordinates>
+    <panel_attributes>/ChessBoard/
+
+--
+static width: Int
+ChessImageTile[][]: Class
+borderChars[]: Character
+pieceClicked: boolean
+madeMove: boolean
+initialMove: boolean
+pawnMadeIt: boolean
+HashMap: &lt;String, File&gt;
+firstClickx: Int
+firstClicky: Int
+--
+InitBoard(SpriteWindo, Size): void
+updateBoard(AnimationFrame): void
+InitialMove(int, int): void
+moveToEmpyTile(int, int): void
+takePiece(int, int): void
+promotePawn(int, int): void
+moveChessPiece(int, int): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>100</x>
+      <y>470</y>
+      <w>350</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>/ChessTextMode/
+
+--
+--
+MoveTextPiece(ChessBoard, Int, Int, Int, Int): void
+PrintBoard(): String</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>490</x>
+      <y>480</y>
+      <w>260</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>/ChessPieces/
+
+--
+HashMap: &lt;String, File&gt;
+--
+getPieces():HashMap&lt;String, File&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>900</x>
+      <y>40</y>
+      <w>250</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+/Tile/
+
+--
+
+--
++paint(Graphics2D g, Size s): void
++getText(): char
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>900</x>
+      <y>300</y>
+      <w>260</w>
+      <h>300</h>
+    </coordinates>
+    <panel_attributes>/ChessImageTile/
+
+--
+Image: BufferedImage
+text: char
+color: java.awt.Color
+size: edu.calpoly.spritely.Size
+hasPiece: boolean
+letterSet: boolean
+highLight: boolean
+letter: String
+--
+setBorder(letter): void
+paint(g, size): void
+getText: char
+getTileColor: java.awt.Color
+getTileSize: edu.calpoly.spritely.Size
+getTileImage: BufferedImage
+scaleImage(im, size): Buffered Image
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1020</x>
+      <y>150</y>
+      <w>30</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>0</x>
+      <y>360</y>
+      <w>120</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>creates &gt;</panel_attributes>
+    <additional_attributes>100.0;130.0;10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>590</x>
+      <y>360</y>
+      <w>70</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>&lt; uses</panel_attributes>
+    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>720</x>
+      <y>220</y>
+      <w>280</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>&lt; uses</panel_attributes>
+    <additional_attributes>220.0;80.0;220.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>240</x>
+      <y>40</y>
+      <w>260</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>creates &gt;</panel_attributes>
+    <additional_attributes>240.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+</diagram>
