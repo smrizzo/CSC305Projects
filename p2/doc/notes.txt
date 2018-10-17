@@ -1,0 +1,27 @@
+Dear Customer(Prof Foote)
+
+
+Completed Requirements:
+1) Visualize ChessBoard with GUI using Spritely
+2) System supports moving of pieces as described in spec
+3) System supports taking of another piece as long as its of opposite color
+4) System supports pawn promotion. When White pawn reaches appropriate side you get white pieces options, replacing a-d.
+	When Black pawn reaches appropriate side you get black pieces options, replacing a-d
+5) System Supports one or more kibitzers as described in Spec
+6) System Supports textMode
+	-TEXTMODE
+	System supports moving and taking pieces while entering something like "a1a5".
+	System will quit game if first character entered is 'q'.
+	
+7) System supports highlighting of pieces when it is clicked getting ready to make a move
+8) When Pawn makes to other side and is clicked for promotion, pawn will also be highlighted
+
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+
+Missing Requirements:
+1)TEXTMODE:
+	System does not support pawn promotion in textMode due to time constraints
+2)TESTING:
+	System does not support many test as of right now. Can and will add more for betting testing of system
+
