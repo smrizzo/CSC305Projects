@@ -95,6 +95,13 @@ public class Main {
         if("run".equals(args[0])) {
             window.setTextMode();
             window.setKeyTypedHandler((c) -> setKeyClick(c));
+            window.setMouseClickedHandler((x, y) -> {
+                try {
+                    setMouseclick(x, y);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         } else if("chess".equals(args[0])){
             window.setMouseClickedHandler((x, y) -> {
                 try {
@@ -109,7 +116,8 @@ public class Main {
                 System.out.println(numOfKibbitzers);
             }
         } else if ("test".equals(args[0])) {
-            System.out.println("Run some test");
+            (new MyTest()).runTests();
+            System.exit(0);
         }
 
         window.setTileSize(tileSize);
