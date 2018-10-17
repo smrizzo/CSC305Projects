@@ -6,6 +6,7 @@ import edu.calpoly.testy.Testy;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class MyTest {
@@ -24,24 +25,24 @@ public class MyTest {
         Assert.assertEquals(sizeReturned.width, 100);
     }
 
-    public void testHasPiece() {
+    public void testHasPiece() throws IOException {
         Size windowSize = new Size(8, 8);
         SpriteWindow window = new SpriteWindow("Window", windowSize);
         Size tileSize = new Size(100, 100);
         window.setTileSize(tileSize);
         AnimationFrame frame = window.getInitialFrame();
-        Cells[1][1] = new ChessImageTile(pieces.get("whitePawn"), size, 'P', Color.GRAY, true);
+        Cells[1][1] = new ChessImageTile(pieces.get("whitePawn"), tileSize, 'P', Color.GRAY, true);
         Assert.assertEquals(Cells[1][1].hasPiece, true);
 
     }
 
-    public void testCharText() {
+    public void testCharText() throws IOException {
         Size windowSize = new Size(8, 8);
         SpriteWindow window = new SpriteWindow("Window", windowSize);
         Size tileSize = new Size(100, 100);
         window.setTileSize(tileSize);
         AnimationFrame frame = window.getInitialFrame();
-        Cells[1][1] = new ChessImageTile(pieces.get("whitePawn"), size, 'P', Color.GRAY, true);
+        Cells[1][1] = new ChessImageTile(pieces.get("whitePawn"), tileSize, 'P', Color.GRAY, true);
         Assert.assertEquals(Cells[1][1].getText(), 'P');
     }
 
