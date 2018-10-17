@@ -113,11 +113,13 @@ public class Main {
             if(args.length > 1 && "kibbitzer".equals(args[1])) {
                 numOfKibbitzers = getNumOfKibbitzers(args);
                 isKibbitzer = true;
-                System.out.println(numOfKibbitzers);
             }
         } else if ("test".equals(args[0])) {
             (new MyTest()).runTests();
             System.exit(0);
+        } else {
+            System.out.println("Unrecognized argument:  ${args[0]}");
+            usage();
         }
 
         window.setTileSize(tileSize);

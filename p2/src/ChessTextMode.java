@@ -2,15 +2,6 @@ import java.awt.image.BufferedImage;
 
 public class ChessTextMode extends ChessBoard {
 
-//    public Character borderChars[] = {'a', 'b', 'c', 'd','e','f','g','h'};
-//    List<Character> myCharList = Arrays.asList(borderChars);
-//    public Character borderNumbers[] = new Character[]{'8', '7', '6', '5', '4', '3', '2', '1'};
-//    public ArrayList<Character> textMove = new ArrayList<>(4);
-//    List<Character> myNumList = Arrays.asList(borderNumbers);
-
-
-
-
     public void MoveTextPiece(ChessBoard chessBoard, Integer startRow, Integer startCol, Integer finishRow, Integer finishCol) {
         if(Cells[startRow][startCol].hasPiece && !Cells[finishRow][finishCol].hasPiece && finishRow != 0 && finishCol != 0) {
             ChessImageTile finish = Cells[finishRow][finishCol];

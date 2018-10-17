@@ -243,6 +243,7 @@ public class ChessBoard {
         }
     }
 
-
-
+    public static ChessImageTile[][] getCells() {
+        return Cells;
+    }
 }

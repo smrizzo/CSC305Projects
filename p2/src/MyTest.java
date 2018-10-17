@@ -1,4 +1,3 @@
-import edu.calpoly.spritely.AnimationFrame;
 import edu.calpoly.spritely.Size;
 import edu.calpoly.spritely.SpriteWindow;
 import edu.calpoly.testy.Assert;
@@ -30,7 +29,6 @@ public class MyTest {
         SpriteWindow window = new SpriteWindow("Window", windowSize);
         Size tileSize = new Size(100, 100);
         window.setTileSize(tileSize);
-        AnimationFrame frame = window.getInitialFrame();
         Cells[1][1] = new ChessImageTile(pieces.get("whitePawn"), tileSize, 'P', Color.GRAY, true);
         Assert.assertEquals(Cells[1][1].hasPiece, true);
 
@@ -41,10 +39,10 @@ public class MyTest {
         SpriteWindow window = new SpriteWindow("Window", windowSize);
         Size tileSize = new Size(100, 100);
         window.setTileSize(tileSize);
-        AnimationFrame frame = window.getInitialFrame();
         Cells[1][1] = new ChessImageTile(pieces.get("whitePawn"), tileSize, 'P', Color.GRAY, true);
         Assert.assertEquals(Cells[1][1].getText(), 'P');
     }
+
 
 
 
