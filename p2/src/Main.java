@@ -103,6 +103,7 @@ public class Main {
                 }
             });
         } else if("chess".equals(args[0])){
+            window.setKeyTypedHandler((c) -> setKeyClick(c));
             window.setMouseClickedHandler((x, y) -> {
                 try {
                     setMouseclick(x, y);
