@@ -1,0 +1,97 @@
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ChessController implements ViewObserver{
+
+    private ChessModel model;
+    private ChessView view;
+    private boolean initialClick;
+    private boolean pieceClicked;
+    private boolean madeMove;
+    protected boolean pawnMadeIt;
+    private int firstClickX;
+    private int firstClicky;
+    Piece[][] pieces;
+    List<Thread> threads = new ArrayList<>();
+
+    public ChessController(ChessModel model) throws IOException {
+        this.model = model;
+        this.pieces = model.getPieces();
+        model.registerObserver(this);
+        //view = new ChessView(false, model, this);
+        addView(false);
+        addView(true);
+        addView(true);
+        this.initialClick = false;
+        this.pieceClicked = false;
+        this.madeMove = false;
+        this.pawnMadeIt = false;
+        runThreads();
+    }
+    public void addView(boolean kibbitzer) throws IOException {
+        threads.add(new Thread(new ChessView(kibbitzer, model, this)));
+    }
+    public void runThreads() {
+        for(int i = 0; i < threads.size(); i++) {
+            threads.get(i).start();
+        }
+    }
+
+    public void clickedPiece(int x, int y) throws CloneNotSupportedException {
+      System.out.println("We need to do something with this click: " + x + ", " + y);
+        if(pieces[x][y] != null && !initialClick && !pieceClicked) {
+            System.out.println("Initialclick");
+            if((y == 1 && pieces[x][y] instanceof WhitePawnPiece)) {
+                model.promoteWhitePawn();
+                pawnMadeIt = true;
+            } else if(y == 8 && pieces[x][y] instanceof BlackPawnPiece) {
+                model.promoteBlackPawn();
+                pawnMadeIt = true;
+            }
+            model.setFromXY(x, y);
+            initialClick = true;
+            pieceClicked = true;
+            firstClickX = x;
+            firstClicky = y;
+            //System.out.println("first click: " + firstClickX + ", " + firstClicky);
+
+        } else if(pieceClicked && pieces[x][y] == null && x != 0 && y != 0 && !pawnMadeIt) {
+            System.out.println("Making regular Move");
+            model.setToXY(x, y);
+            model.regularMove();
+            pieceClicked = false;
+            initialClick = false;
+        } else if(pieceClicked && pieces[x][y] != null && !pawnMadeIt) {
+            model.setToXY(x, y);
+            if(model.moveAndtakePiece()) {
+                initialClick = false;
+                pieceClicked = false;
+            }
+
+        } else if(pieceClicked && initialClick && x == this.firstClickX && y == this.firstClicky) {
+            pieceClicked = true;
+            initialClick = true;
+            //System.out.println("Got here");
+
+        } else if (pieceClicked && pawnMadeIt && y == 0 && (x >= 1 && x <= 4)){
+            model.setToXY(x, y);
+            model.promotingPawn();
+            pawnMadeIt = false;
+            pieceClicked = false;
+            initialClick = false;
+        } else {
+            pieceClicked = false;
+        }
+    }
+
+
+    @Override
+    public void notifyBoardUpdate(ChessModel m) {
+        this.model = m;
+        this.pieces = m.getPieces();
+        initialClick = false;
+        pieceClicked = false;
+        madeMove = false;
+    }
+}

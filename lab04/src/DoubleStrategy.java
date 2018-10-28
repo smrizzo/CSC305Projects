@@ -8,10 +8,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class DoubleStrategy implements RunStrategy<Double> {
-    //private VisitorClass<Double> visitor;
     private DoubleVisitor visitor;
     public DoubleStrategy() {
-        //this.visitor = new VisitorClass<Double>();
         this.visitor = new DoubleVisitor();
     }
 
