@@ -57,6 +57,7 @@ public class ChessView implements ViewObserver , Runnable {
             }
         }
 
+        //
         for(int row = 1; row < 9; row++) {
             for(int col = 1; col < 9; col++ ) {
                 if((row + col) % 2 == 0) {
@@ -173,7 +174,7 @@ public class ChessView implements ViewObserver , Runnable {
             e.printStackTrace();
         }
 
-        window.setFps(60);
+        window.setFps(20);
         window.start();
 
         while (window.isRunning()) {

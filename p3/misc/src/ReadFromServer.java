@@ -65,13 +65,13 @@ public class ReadFromServer implements Runnable {
         lock.lock();
         try {
             while(myOtherQueue.size() != 4 ) {
-                System.out.println("Checking condition for myOtherQueue size: " + myOtherQueue.size());
+                //System.out.println("Checking condition for myOtherQueue size: " + myOtherQueue.size());
                 condition.await();
             }
-            System.out.println("adding elements from OtherQueue to list and returning to main");
+            //System.out.println("adding elements from OtherQueue to list and returning to main");
             List<String> otherResult = new LinkedList<>();
             for (int i = 0; i < 4; i++) {
-                System.out.println("adding queue item to list from myOtherQueue: " + myOtherQueue.peek());
+                //System.out.println("adding queue item to list from myOtherQueue: " + myOtherQueue.peek());
                 otherResult.add(myOtherQueue.remove());
             }
 
@@ -85,17 +85,17 @@ public class ReadFromServer implements Runnable {
         lock.lock();
         try {
             while(myQueue.size() != 2) {
-                System.out.println("Checking length of myQueue which is size: " + myQueue.size());
+                //System.out.println("Checking length of myQueue which is size: " + myQueue.size());
                 condition.await();
             }
             //System.out.println("adding elements from queue to list and returning to main");
             List<String> result = new LinkedList<>();
             for (int i = 0; i < 2; i++) {
-                System.out.println("adding queue item to list from myQueue: " + myQueue.peek());
+                //System.out.println("adding queue item to list from myQueue: " + myQueue.peek());
                 result.add(myQueue.remove());
             }
             if(!myQueue.isEmpty()) {
-                System.out.println("Myqueue is not empty" + myQueue.size());
+                //System.out.println("Myqueue is not empty" + myQueue.size());
                 //System.out.println("What was found in queue: " + myQueue.remove());
                 //myQueue.remove();
             }

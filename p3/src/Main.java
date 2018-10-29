@@ -146,9 +146,14 @@ public class Main {
 //        }
 //    }
 
+
+
     public static void main(String[] args) throws IOException {
         ChessModel model = new ChessModel();
         ChessController controller = new ChessController(model);
+
+
+
 //        ChessView view = new ChessView(false, model, controller);
 //        ChessView view2 = new ChessView(true, model, controller);
 //        Thread t = new Thread(view);

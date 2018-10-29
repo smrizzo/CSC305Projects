@@ -17,6 +17,7 @@ public class ChessPieces {
         pieces.put("whiteKing", new File("./images/white_king.png"));
         pieces.put("whiteQueen", new File("./images/white_queen.png"));
         pieces.put("whiteRook", new File("./images/white_rook.png"));
+        pieces.put("kibbitzer",new File("./images/kibitzer.jpg"));
     }
 
     public HashMap<String, File> getImageFiles() {

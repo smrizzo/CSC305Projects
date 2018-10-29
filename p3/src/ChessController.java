@@ -27,7 +27,7 @@ public class ChessController implements ViewObserver{
         this.pieceClicked = false;
         this.madeMove = false;
         this.pawnMadeIt = false;
-        runThreads();
+        //runThreads();
     }
     public void addView(boolean kibbitzer) throws IOException {
         threads.add(new Thread(new ChessView(kibbitzer, model, this)));

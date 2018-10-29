@@ -31,23 +31,23 @@ public class Main {
 //        System.out.println(initialBoard);
 
 
-        System.out.println("Waiting at step 1...");
+        //System.out.println("Waiting at step 1...");
         List<String> myInitialList = readFromServer.getInitialResponse();
         for(int i = 0; i < myInitialList.size(); i++) {
-            System.out.println("Item returned from intial list:" + myInitialList.get(i));
+            //System.out.println("Item returned from intial list:" + myInitialList.get(i));
             System.out.println(myInitialList.get(i));
         }
         System.out.print("\n");
 
         while(true) {
 
-            System.out.println("waiting at step 2....");
+            System.out.println("waiting for board to change");
             List<String> myList = readFromServer.getResponse();
+            System.out.println("Recieved from server");
             for(int i = 0; i < myList.size(); i++) {
                 //System.out.println("Item returned from list:" + myList.get(i));
                 System.out.println(myList.get(i));
             }
-            System.out.println("Waiting to write to server");
 
         }
 
