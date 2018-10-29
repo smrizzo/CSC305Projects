@@ -9,17 +9,17 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ReadFromServer implements Runnable {
 
-    Socket socket;
-    DataInputStream input;
-    String response = "";
-    String initialStart = "";
-    Character mColorOfPlayer = '\0';
-    String initialCommand = "";
-    String initialBoard = "";
-    ReentrantLock lock = new ReentrantLock();
+    private Socket socket;
+    private DataInputStream input;
+    private String response = "";
+    private String initialStart = "";
+    private Character mColorOfPlayer = '\0';
+    private String initialCommand = "";
+    private String initialBoard = "";
+    private ReentrantLock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
-    Queue<String> myQueue = new LinkedList<>();
-    Queue<String> myOtherQueue = new LinkedList<>();
+    private Queue<String> myQueue = new LinkedList<>();
+    private Queue<String> myOtherQueue = new LinkedList<>();
 
     public ReadFromServer(Socket socket) {
         this.socket = socket;
@@ -31,24 +31,21 @@ public class ReadFromServer implements Runnable {
         try {
             myQueue.add(response);
             condition.signalAll();
-            //checkSize();
         } finally {
             lock.unlock();
         }
     }
-
+    //add something initial queue
     public void addToInitialQueue(String response) {
-        //System.out.println("Adding: " + response);
         lock.lock();
         try {
             myOtherQueue.add(response);
             condition.signalAll();
-            //checkInitialQueue();
         } finally {
             lock.unlock();
         }
     }
-
+    //Method for returning intitial input from server after connection
     public List<String> getInitialResponse() throws InterruptedException {
         lock.lock();
         try {
@@ -69,6 +66,7 @@ public class ReadFromServer implements Runnable {
         }
     }
 
+    //This gets response from server
     public List<String> getResponse() throws InterruptedException {
         lock.lock();
         try {
@@ -92,18 +90,15 @@ public class ReadFromServer implements Runnable {
 
     @Override
     public void run() {
-
-
         try {
 
             input = new DataInputStream(socket.getInputStream());
 
-            System.out.println("Waiting...");
+            //Getting initial input from server after connecting
             initialStart = input.readUTF();
             addToInitialQueue(initialStart);
 
             mColorOfPlayer = input.readChar();
-
             addToInitialQueue(mColorOfPlayer.toString());
 
             initialCommand = input.readUTF();
@@ -113,8 +108,8 @@ public class ReadFromServer implements Runnable {
             addToInitialQueue(initialBoard);
 
             while(true) {
-                response = input.readUTF();
 
+                response = input.readUTF();
                 addString(response);
                 response = input.readUTF();
                 addString(response);

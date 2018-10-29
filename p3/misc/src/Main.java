@@ -44,6 +44,7 @@ public class Main {
             System.out.println("waiting for board to change");
             List<String> myList = readFromServer.getResponse();
             System.out.println("Recieved from server");
+
             for(int i = 0; i < myList.size(); i++) {
                 //System.out.println("Item returned from list:" + myList.get(i));
                 System.out.println(myList.get(i));

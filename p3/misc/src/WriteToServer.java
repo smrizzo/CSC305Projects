@@ -6,14 +6,14 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class WriteToServer implements Runnable {
-    Socket socket;
-    DataOutputStream output;
-    long password;
-    int protocolVersion;
-    String gameHeaderName;
-    int gameHeaderVersion;
-    String sessionID;
-    ReentrantLock lock = new ReentrantLock();
+    private Socket socket;
+    private DataOutputStream output;
+    private long password;
+    private int protocolVersion;
+    private String gameHeaderName;
+    private int gameHeaderVersion;
+    private String sessionID;
+    private ReentrantLock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
     String command = "";
     private Queue<Integer> myNumList = new LinkedList<>();
@@ -81,47 +81,6 @@ public class WriteToServer implements Runnable {
         }
     }
 
-
-    public void setCommand(String command) {
-        lock.lock();
-        try {
-            this.command = command;
-            condition.signalAll();
-        } finally {
-            lock.unlock();
-        }
-
-    }
-    public void addToQueue(Integer num) throws InterruptedException {
-        //System.out.println("Adding," + num + " ,something queue");
-        lock.lock();
-        try {
-            myNumList.add(num);
-            //System.out.println("queue size" + myNumList.size());
-            condition.signalAll();
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public void writeMoveToServer() throws InterruptedException, IOException {
-        lock.lock();
-        try {
-            while(myNumList.size() != 4) {
-                condition.await();
-            }
-            //System.out.println("command: " + command);
-            output.writeUTF(command);
-            for (int i = 0; i < 4; i++) {
-                //System.out.println("Outputing to server");
-                output.writeInt(myNumList.remove());
-            }
-        } finally {
-            lock.unlock();
-        }
-    }
-
-
     @Override
     public void run() {
         Scanner scanner = new Scanner(System.in);
@@ -135,9 +94,6 @@ public class WriteToServer implements Runnable {
             while(true) {
                 System.out.println("Enter command: move, followed by x,y->x,y");
 
-//                    System.out.println("Before writing to server");
-//                    writeMoveToServer();
-//                    System.out.println("Waiting for command");
                     String m = scanner.next();
                     if(m.equals("m1")) {
                         move1();
@@ -148,19 +104,6 @@ public class WriteToServer implements Runnable {
                     } else if(m.equals("p")) {
                         promotePawn();
                     }
-//                    Integer fromX = scanner.nextInt();
-//                    addToQueue(fromX);
-//                    Integer fromY = scanner.nextInt();
-//                    addToQueue(fromY);
-//                    Integer toX = scanner.nextInt();
-//                    addToQueue(toX);
-//                    Integer toY = scanner.nextInt();
-//                    addToQueue(toY);
-
-
-//                catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
             }
 
         } catch (IOException e) {

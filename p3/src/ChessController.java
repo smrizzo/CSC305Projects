@@ -12,6 +12,12 @@ public class ChessController implements ViewObserver{
     protected boolean pawnMadeIt;
     private int firstClickX;
     private int firstClicky;
+    protected boolean mWhiteBoard;
+    protected boolean mBlackBoard;
+    protected boolean connectToServer;
+    protected String ipAddress;
+    protected String port;
+    protected String mySessionId;
     Piece[][] pieces;
     List<Thread> threads = new ArrayList<>();
 
@@ -21,8 +27,8 @@ public class ChessController implements ViewObserver{
         model.registerObserver(this);
         //view = new ChessView(false, model, this);
         addView(false);
-        addView(true);
-        addView(true);
+        //addView(true);
+        //addView(true);
         this.initialClick = false;
         this.pieceClicked = false;
         this.madeMove = false;
@@ -36,6 +42,28 @@ public class ChessController implements ViewObserver{
         for(int i = 0; i < threads.size(); i++) {
             threads.get(i).start();
         }
+    }
+
+    public void setWhiteBoard() {
+        this.mWhiteBoard = true;
+        this.mBlackBoard = false;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public void setMySessionId(String sessionId) {
+        this.mySessionId = sessionId;
+    }
+
+    public void setBlackBoard() {
+        this.mBlackBoard = true;
+        this.mWhiteBoard = false;
     }
 
     public void clickedPiece(int x, int y) throws CloneNotSupportedException {
