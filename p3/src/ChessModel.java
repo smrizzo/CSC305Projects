@@ -7,9 +7,20 @@ public class ChessModel {
     private List<ViewObserver> Observers = new ArrayList<>();
     private Integer[] fromXY = new Integer[2];
     private Integer[] toXY = new Integer[2];
+    Character[][] piecesFromServer = new Character[9][9];
+    String ipAddress;
+    String port;
+    String SessionID;
 
     public ChessModel() {
         initializeBoard();
+    }
+
+    public ChessModel(String ipAddress, String port, String SessionID) {
+        this.ipAddress = ipAddress;
+        this.port = port;
+        this.SessionID = SessionID;
+
     }
 
     private void initializeBoard() {
@@ -58,6 +69,7 @@ public class ChessModel {
             }
         }
     }
+
 
     public void registerObserver(ViewObserver o) {
         Observers.add(o);

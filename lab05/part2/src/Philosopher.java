@@ -59,9 +59,6 @@ public class Philosopher extends Thread {
     public void takeChopSticks() {
         lock.lock();
         try {
-            while (!leftChopStick.chopStickTaken && !rightChopStick.chopStickTaken) {
-                condition.await();
-            }
             watchdog.aboutToRequest(leftChopStick.getChopStickID());
             watchdog.aboutToRequest(rightChopStick.getChopStickID());
             leftChopStick.chopStickTaken = true;
@@ -71,7 +68,7 @@ public class Philosopher extends Thread {
         }
     }
 
-    public void
+
 }
 
 //aquire a lock while its not taken

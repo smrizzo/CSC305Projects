@@ -13,6 +13,8 @@ public class ChessView implements ViewObserver , Runnable {
     private ChessModel model;//model reference
     private ChessController controller;
     private boolean isKibbitzer;
+    private boolean mWhiteBoard;
+    private boolean mBlackBoard;
     private Piece[][] pieces;
     private ChessPieces chessImagesFiles = new ChessPieces();
     private HashMap<String, File> imagefiles;
@@ -26,13 +28,15 @@ public class ChessView implements ViewObserver , Runnable {
     private ArrayList<Character> textMove = new ArrayList<>(4);
     private List<Character> myNumList = Arrays.asList(borderNumbers);
 
-    public ChessView(boolean isKibbitzer, ChessModel model, ChessController controller) throws IOException {
+    public ChessView(boolean isKibbitzer, ChessModel model, ChessController controller, boolean mWhiteBoard, boolean mBlackBoard) throws IOException {
        this.isKibbitzer = isKibbitzer;
        this.model = model;
        this.controller = controller;
        this.pieces = model.getPieces();
        this.imagefiles = chessImagesFiles.getImageFiles();
        this.letters = chessImagesFiles.getLetters();
+       this.mWhiteBoard = mWhiteBoard;
+       this.mBlackBoard = mBlackBoard;
        model.registerObserver(this);
        //runView();
     }
@@ -66,9 +70,7 @@ public class ChessView implements ViewObserver , Runnable {
                 frame.addTile(i, 0, new SolidColorTile(Color.GREEN, 't'));
             }
         }
-        if(isKibbitzer) {
-            frame.addTile(0, 0, new ImageTile(imagefiles.get("kibbitzer"), new Size(pixelSize, pixelSize), '\0'));
-        }
+
         //
         for(int row = 1; row < 9; row++) {
             for(int col = 1; col < 9; col++ ) {
@@ -81,7 +83,12 @@ public class ChessView implements ViewObserver , Runnable {
             }
         }
 
-        if(controller.mWhiteBoard) {
+        if(mWhiteBoard || isKibbitzer) {
+
+            if(isKibbitzer) {
+                frame.addTile(0, 0, new ImageTile(imagefiles.get("kibbitzer"), new Size(pixelSize, pixelSize), '\0'));
+            }
+
             for(int row = 0; row < 9; row++) {
                 for (int col = 0; col < 9; col++) {
                     if (pieces[row][col] instanceof WhitePawnPiece) {
@@ -109,25 +116,25 @@ public class ChessView implements ViewObserver , Runnable {
                     } else if (pieces[row][col] instanceof BlackQueenPiece) {
                         frame.addTile(row, col, new ImageTile(imagefiles.get("blackQueen"), new Size(pixelSize, pixelSize), pieces[row][col].getText()));
                     } else if (row == 0 && col == 1 ) {
-                        frame.addTile(row, col, new ImageTile(imagefiles.get("1"), new Size(pixelSize, pixelSize), '1'));
-                    } else if (row == 0 && col == 2) {
-                        frame.addTile(row, col, new ImageTile(imagefiles.get("2"), new Size(pixelSize, pixelSize), '2'));
-                    } else if (row == 0 && col == 3) {
-                        frame.addTile(row, col, new ImageTile(imagefiles.get("3"), new Size(pixelSize, pixelSize), '3'));
-                    } else if (row == 0 && col == 4) {
-                        frame.addTile(row, col, new ImageTile(imagefiles.get("4"), new Size(pixelSize, pixelSize), '4'));
-                    } else if (row == 0 && col == 5) {
-                        frame.addTile(row, col, new ImageTile(imagefiles.get("5"), new Size(pixelSize, pixelSize), '5'));
-                    } else if (row == 0 && col == 6) {
-                        frame.addTile(row, col, new ImageTile(imagefiles.get("6"), new Size(pixelSize, pixelSize), '6'));
-                    } else if (row == 0 && col == 7) {
-                        frame.addTile(row, col, new ImageTile(imagefiles.get("7"), new Size(pixelSize, pixelSize), '7'));
-                    } else if (row == 0 && col == 8) {
                         frame.addTile(row, col, new ImageTile(imagefiles.get("8"), new Size(pixelSize, pixelSize), '8'));
+                    } else if (row == 0 && col == 2) {
+                        frame.addTile(row, col, new ImageTile(imagefiles.get("7"), new Size(pixelSize, pixelSize), '7'));
+                    } else if (row == 0 && col == 3) {
+                        frame.addTile(row, col, new ImageTile(imagefiles.get("6"), new Size(pixelSize, pixelSize), '6'));
+                    } else if (row == 0 && col == 4) {
+                        frame.addTile(row, col, new ImageTile(imagefiles.get("5"), new Size(pixelSize, pixelSize), '5'));
+                    } else if (row == 0 && col == 5) {
+                        frame.addTile(row, col, new ImageTile(imagefiles.get("4"), new Size(pixelSize, pixelSize), '4'));
+                    } else if (row == 0 && col == 6) {
+                        frame.addTile(row, col, new ImageTile(imagefiles.get("3"), new Size(pixelSize, pixelSize), '3'));
+                    } else if (row == 0 && col == 7) {
+                        frame.addTile(row, col, new ImageTile(imagefiles.get("2"), new Size(pixelSize, pixelSize), '2'));
+                    } else if (row == 0 && col == 8) {
+                        frame.addTile(row, col, new ImageTile(imagefiles.get("1"), new Size(pixelSize, pixelSize), '1'));
                     }
                 }
             }
-        } else if(controller.mBlackBoard) {
+        } else if(mBlackBoard) {
             for(int row = 0; row < 9; row++) {
                 for(int col = 0; col < 9; col++) {
                     if(pieces[row][col] instanceof WhitePawnPiece) {
@@ -155,21 +162,21 @@ public class ChessView implements ViewObserver , Runnable {
                     } else if(pieces[row][col] instanceof BlackQueenPiece) {
                         frame.addTile(row, col, new ImageTile(imagefiles.get("whiteQueen"), new Size(pixelSize, pixelSize), pieces[row][col].getText()));
                     } else if (row == 0 && col == 1 ) {
-                        frame.addTile(row, col, new ImageTile(imagefiles.get("8"), new Size(pixelSize, pixelSize), '8'));
-                    } else if (row == 0 && col == 2) {
-                        frame.addTile(row, col, new ImageTile(imagefiles.get("7"), new Size(pixelSize, pixelSize), '7'));
-                    } else if (row == 0 && col == 3) {
-                        frame.addTile(row, col, new ImageTile(imagefiles.get("6"), new Size(pixelSize, pixelSize), '6'));
-                    } else if (row == 0 && col == 4) {
-                        frame.addTile(row, col, new ImageTile(imagefiles.get("5"), new Size(pixelSize, pixelSize), '5'));
-                    } else if (row == 0 && col == 5) {
-                        frame.addTile(row, col, new ImageTile(imagefiles.get("4"), new Size(pixelSize, pixelSize), '4'));
-                    } else if (row == 0 && col == 6) {
-                        frame.addTile(row, col, new ImageTile(imagefiles.get("3"), new Size(pixelSize, pixelSize), '3'));
-                    } else if (row == 0 && col == 7) {
-                        frame.addTile(row, col, new ImageTile(imagefiles.get("2"), new Size(pixelSize, pixelSize), '2'));
-                    } else if (row == 0 && col == 8) {
                         frame.addTile(row, col, new ImageTile(imagefiles.get("1"), new Size(pixelSize, pixelSize), '1'));
+                    } else if (row == 0 && col == 2) {
+                        frame.addTile(row, col, new ImageTile(imagefiles.get("2"), new Size(pixelSize, pixelSize), '2'));
+                    } else if (row == 0 && col == 3) {
+                        frame.addTile(row, col, new ImageTile(imagefiles.get("3"), new Size(pixelSize, pixelSize), '3'));
+                    } else if (row == 0 && col == 4) {
+                        frame.addTile(row, col, new ImageTile(imagefiles.get("4"), new Size(pixelSize, pixelSize), '4'));
+                    } else if (row == 0 && col == 5) {
+                        frame.addTile(row, col, new ImageTile(imagefiles.get("5"), new Size(pixelSize, pixelSize), '5'));
+                    } else if (row == 0 && col == 6) {
+                        frame.addTile(row, col, new ImageTile(imagefiles.get("6"), new Size(pixelSize, pixelSize), '6'));
+                    } else if (row == 0 && col == 7) {
+                        frame.addTile(row, col, new ImageTile(imagefiles.get("7"), new Size(pixelSize, pixelSize), '7'));
+                    } else if (row == 0 && col == 8) {
+                        frame.addTile(row, col, new ImageTile(imagefiles.get("8"), new Size(pixelSize, pixelSize), '8'));
                     }
                 }
             }

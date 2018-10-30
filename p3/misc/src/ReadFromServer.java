@@ -9,12 +9,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ReadFromServer implements Runnable {
 
-    Socket socket;
-    DataInputStream input;
-    String response = "";
-    String initialStart = "";
-    Character mColorOfPlayer = '\0';
-    String initialCommand = "";
+    private Socket socket;
+    private DataInputStream input;
+    private String response = "";
+    private String initialStart = "";
+    private Character mColorOfPlayer;
+    private String initialCommand = "";
     String initialBoard = "";
     ReentrantLock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();

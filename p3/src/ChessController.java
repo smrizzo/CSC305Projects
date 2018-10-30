@@ -14,6 +14,9 @@ public class ChessController implements ViewObserver{
     private int firstClicky;
     protected boolean mWhiteBoard;
     protected boolean mBlackBoard;
+    private int numberOfBlackBoards;
+    private int numberOfWhiteBoards;
+    private int numberOfKibbitzers;
     protected boolean connectToServer;
     protected String ipAddress;
     protected String port;
@@ -21,22 +24,41 @@ public class ChessController implements ViewObserver{
     Piece[][] pieces;
     List<Thread> threads = new ArrayList<>();
 
-    public ChessController(ChessModel model) throws IOException {
+    public ChessController(ChessModel model, int numberOfBlackBoards, int numberOfWhiteBoards, int numberOfKibbitzers) throws IOException {
         this.model = model;
         this.pieces = model.getPieces();
         model.registerObserver(this);
-        //view = new ChessView(false, model, this);
-        addView(false);
-        //addView(true);
-        //addView(true);
+        this.numberOfBlackBoards = numberOfBlackBoards;
+        this.numberOfWhiteBoards = numberOfWhiteBoards;
+        this.numberOfKibbitzers = numberOfKibbitzers;
         this.initialClick = false;
         this.pieceClicked = false;
         this.madeMove = false;
         this.pawnMadeIt = false;
-        //runThreads();
+
+        if(numberOfBlackBoards > 0) {
+            for(int i = 0; i < numberOfBlackBoards; i++) {
+                addView(false, true, false);
+            }
+        }
+
+        if(numberOfWhiteBoards > 0) {
+            for(int i = 0; i < numberOfWhiteBoards; i++) {
+                addView(false, false, true);
+            }
+        }
+
+        if(numberOfKibbitzers > 0) {
+            for(int i = 0; i < numberOfKibbitzers; i++) {
+                addView(true, false, false);
+            }
+        }
+        runThreads();
     }
-    public void addView(boolean kibbitzer) throws IOException {
-        threads.add(new Thread(new ChessView(kibbitzer, model, this)));
+
+
+    public void addView(boolean kibbitzer, boolean blackBoard, boolean whiteBoard) throws IOException {
+        threads.add(new Thread(new ChessView(kibbitzer, model, this, blackBoard, whiteBoard)));
     }
     public void runThreads() {
         for(int i = 0; i < threads.size(); i++) {

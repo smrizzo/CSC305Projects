@@ -1,11 +1,13 @@
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class WriteToServer implements Runnable {
+
     private Socket socket;
     private DataOutputStream output;
     private long password;
@@ -27,7 +29,7 @@ public class WriteToServer implements Runnable {
         this.protocolVersion = 2;
         this.gameHeaderName = "chess";
         this.gameHeaderVersion = 1;
-        this.sessionID = "smrizzo3455555";
+        this.sessionID = "smrizzo345";
     }
 
     public void InitializeConnection() throws IOException {
@@ -54,51 +56,6 @@ public class WriteToServer implements Runnable {
 
     }
 
-    public void move1() throws IOException {
-//        lock.lock();
-//        try {
-//            output.writeUTF("move");
-//            output.writeInt(0);
-//            output.writeInt(6);
-//            output.writeInt(1);
-//            output.writeInt(0);
-//            output.flush();
-//        } finally {
-//            lock.unlock();
-//        }
-
-        serverMove(0, 6, 1,  0);
-
-    }
-
-    public void move2() throws IOException {
-        lock.lock();
-        try {
-            output.writeUTF("move");
-            output.writeInt(3);
-            output.writeInt(0);
-            output.writeInt(3);
-            output.writeInt(7);
-            output.flush();
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public void promotePawn() throws IOException {
-//        lock.lock();
-//        try {
-//            output.writeUTF("promote pawn");
-//            output.writeInt(1);
-//            output.writeInt(0);
-//            output.writeChar('Q');
-//            output.flush();
-//        } finally {
-//            lock.unlock();
-//        }
-        serverPromotePawn(1, 0, 'Q');
-    }
-
     public void serverPromotePawn(int x, int y, char c) throws IOException {
         lock.lock();
         try {
@@ -114,28 +71,12 @@ public class WriteToServer implements Runnable {
 
     @Override
     public void run() {
-        Scanner scanner = new Scanner(System.in);
 
         try {
             output = new DataOutputStream(socket.getOutputStream());
             lock.lock();
             InitializeConnection();
             lock.unlock();
-
-            while(true) {
-                System.out.println("Enter command: move, followed by x,y->x,y");
-
-                    String m = scanner.next();
-                    if(m.equals("m1")) {
-                        move1();
-                    } else if(m.equals("m2")) {
-                        move2();
-                    } else if(m.equals("end")) {
-                        break;
-                    } else if(m.equals("p")) {
-                        promotePawn();
-                    }
-            }
 
         } catch (IOException e) {
             System.out.println("Client error: " + e.getMessage());
