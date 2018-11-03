@@ -106,17 +106,21 @@ public class BlackView extends View {
         Size tileSize = new Size(pixelSize, pixelSize);
         SpriteWindow window = new SpriteWindow("Black Player Window", windowSize);
 
-
+        window.setKeyTypedHandler((c) -> {
+            try {
+                setKeyClick(c);
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         window.setMouseClickedHandler((x, y) -> {
             try {
                 if(y == 0) {
-                    System.out.println("y == 0 before clicked");
                     controller.clickedPiece(x, y);
-                    System.out.println("After click in y == 0");
                 } else {
-                    System.out.println("before click on black board");
                     controller.clickedPiece(x, 9 - y);
-                    System.out.println("After click on black board");
                 }
             } catch (CloneNotSupportedException | IOException e) {
                 e.printStackTrace();
@@ -157,6 +161,8 @@ public class BlackView extends View {
                     e.printStackTrace();
                 }
                 window.showNextFrame();
+            } else if(controller.endingGame) {
+                window.stop();
             }
 
         }

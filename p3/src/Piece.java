@@ -7,6 +7,4 @@ abstract public class Piece {
 
     abstract public char getText();
 
-    //abstract public void setPiece(int x, int y);
-
 }

@@ -6,7 +6,6 @@ import java.util.List;
 public class ChessController implements ViewObserver{
 
     private ChessModel model;
-    //private ChessView view;
     protected boolean initialClick;
     private boolean pieceClicked;
     private boolean madeMove;
@@ -33,8 +32,9 @@ public class ChessController implements ViewObserver{
     private ReadFromServer readFromServer;
     List<String> myInitialList;
     List<String> myList;
-    boolean kibbitzerConnected = false;
-    boolean remoteGameConnected = false;
+    private boolean kibbitzerConnected = false;
+    private boolean remoteGameConnected = false;
+    boolean endingGame;
 
     public ChessController(ChessModel model, int numberOfBlackBoards, int numberOfWhiteBoards, int numberOfKibbitzers) throws IOException {
         this.model = model;
@@ -47,28 +47,24 @@ public class ChessController implements ViewObserver{
         this.pieceClicked = false;
         this.madeMove = false;
         this.pawnMadeIt = false;
+        this.endingGame = false;
 
         if(numberOfBlackBoards > 0) {
-            //this.mBlackBoard = true;
             setBlackBoard();
             for(int i = 0; i < numberOfBlackBoards; i++) {
-                //addView(false,this.mWhiteBoard, this.mBlackBoard);
                 addBlackView();
             }
         }
 
         if(numberOfWhiteBoards > 0) {
-//            this.mWhiteBoard = true;
             setWhiteBoard();
             for(int i = 0; i < numberOfWhiteBoards; i++) {
-                //addView(false, this.mWhiteBoard, this.mBlackBoard);
                 addWhiteview();
             }
         }
 
         if(numberOfKibbitzers > 0) {
             for(int i = 0; i < numberOfKibbitzers; i++) {
-                //addView(true, this.mWhiteBoard, this.mBlackBoard);
                 addKibbitzerView();
             }
         }
@@ -85,6 +81,7 @@ public class ChessController implements ViewObserver{
         this.pieceClicked = false;
         this.madeMove = false;
         this.pawnMadeIt = false;
+        this.endingGame = false;
         this.SessionID = SessionID;
         socket = new Socket(ipAddress, port);
         remoteGameConnected = true;
@@ -102,20 +99,16 @@ public class ChessController implements ViewObserver{
     public void InitialResponse() throws InterruptedException, IOException, CloneNotSupportedException {
         myInitialList = readFromServer.getInitialResponse();
         if(myInitialList.get(1).charAt(0) == '\0') {
-            System.out.println("We found a kibbitzer");
             kibbitzerConnected = true;
         } else if(myInitialList.get(1).charAt(0) == 'w') {
             setWhiteBoard();
-            System.out.println("We are gonna be White Player");
         } else if(myInitialList.get(1).charAt(0) == 'b') {
             setBlackBoard();
-            System.out.println("We are gonna be Black Player");
         }
-        for(int i = 0; i < myInitialList.size(); i++) {
-            //System.out.println("Item returned from intial list:" + myInitialList.get(i));
-            System.out.println(myInitialList.get(i));
-        }
-        System.out.print("\n");
+//        for(int i = 0; i < myInitialList.size(); i++) {
+//            System.out.println(myInitialList.get(i));
+//        }
+//        System.out.print("\n");
         parseBoard(myInitialList.get(3));
         if(kibbitzerConnected) {
             addKibbitzerView();
@@ -124,10 +117,8 @@ public class ChessController implements ViewObserver{
         } else {
             addBlackView();
         }
-        //addView(kibbitzerConnected, mWhiteBoard, mBlackBoard);
         runThreads();
         model.setServerBoard(piecesFromServer);
-
 
     }
 
@@ -139,13 +130,11 @@ public class ChessController implements ViewObserver{
             if(myList.get(0).equals("board")) {
                 parseBoard(myList.get(1));
                 model.setServerBoard(piecesFromServer);
-
             }
 
-            for(int i = 0; i < myList.size(); i++) {
-                //System.out.println("Item returned from list:" + myList.get(i));
-                System.out.println(myList.get(i));
-            }
+//            for(int i = 0; i < myList.size(); i++) {
+//                System.out.println(myList.get(i));
+//            }
 
         }
     }
@@ -195,6 +184,22 @@ public class ChessController implements ViewObserver{
     private void setBlackBoard() {
         this.mBlackBoard = true;
         this.mWhiteBoard = false;
+    }
+
+    public void endingGame() throws IOException {
+        if(connectToServer) {
+            writeToServer.endGame();
+
+        }
+        endingGame = true;
+    }
+
+    public void keyBoardPromotePawn() throws CloneNotSupportedException {
+        if(mBlackBoard) {
+            model.promoteBlackPawn();
+        } else {
+            model.promoteWhitePawn();
+        }
     }
 
     public void clickedPiece(int x, int y) throws CloneNotSupportedException, IOException {
@@ -262,7 +267,7 @@ public class ChessController implements ViewObserver{
         } else {
             pieceClicked = false;
         }
-        
+
     }
 
 

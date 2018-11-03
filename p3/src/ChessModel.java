@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChessModel extends GameModel{
+public class ChessModel {
 
     private final Piece [][] pieces = new Piece[9][9];
     private List<ViewObserver> Observers = new ArrayList<>();

@@ -59,7 +59,6 @@ abstract public class View implements Runnable, ViewObserver {
 
 
         if(controller.pawnMadeIt) {
-            System.out.println("Pawn Made it");
             for(int i = 1; i < 5; i++) {
                 frame.addTile(i, 0, new SolidColorTile(Color.GREEN, 't'));
             }
@@ -73,38 +72,48 @@ abstract public class View implements Runnable, ViewObserver {
 
     @Override
     public void notifyBoardUpdate(ChessModel m) {
-        System.out.println("Notifying observer of change");
         this.model = m;
         this.pieces = model.getPieces();
         boardChanged = true;
     }
 
     public void setKeyClick(char c) throws CloneNotSupportedException, IOException {
-        //System.out.println("Got inside setKeyCLick");
+        System.out.println("Got inside setKeyclick");
+        if(controller.pawnMadeIt) {
+            System.out.println("Pawn made it");
+        }
         textMove.add(c);
 
         if(textMove.get(0) == '\n') {
             textMove.remove(0);
         } else if (textMove.size() == 1 && textMove.get(0).equals('q')) {
-            //stopGame = true;
-            System.out.println("we are ending game");
+            controller.endingGame();
         }
 
         if(textMove.size() == 4) {
-            Integer startRow = myCharList.indexOf(textMove.get(0)) + 1;
-            Integer startCol = myNumList.indexOf(textMove.get(1)) + 1;
-            //model.setFromXY(startRow, startCol);
-            controller.clickedPiece(startRow, startCol);
+
             textMove.remove(0);
             textMove.remove(0);
             Integer finishRow = myCharList.indexOf(textMove.get(0)) + 1;
             Integer finishCol = myNumList.indexOf(textMove.get(1)) + 1;
-            //model.setToXY(finishRow, finishCol);
-            controller.clickedPiece(finishRow, finishCol);
+            if(controller.mBlackBoard) {
+                controller.clickedPiece(finishRow, 9 - finishCol);
+            } else {
+                controller.clickedPiece(finishRow, finishCol);
+            }
+
             textMove.remove(0);
             textMove.remove(0);
-            //chessTextMode.MoveTextPiece(chessBoard, startRow, startCol, finishRow, finishCol);
             System.out.println("\n");
+
+        } else if (textMove.size() == 2) {
+            Integer startRow = myCharList.indexOf(textMove.get(0)) + 1;
+            Integer startCol = myNumList.indexOf(textMove.get(1)) + 1;
+            if(controller.mBlackBoard) {
+                controller.clickedPiece(startRow, 9 - startCol);
+            } else{
+                controller.clickedPiece(startRow, startCol);
+            }
 
         }
     }

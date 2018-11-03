@@ -110,9 +110,7 @@ public class WhiteView extends View {
             });
             window.setMouseClickedHandler((x, y) -> {
                 try {
-                    System.out.println("Before click on white board");
                     controller.clickedPiece(x, y);
-                    System.out.println("After click on white board");
 
                 } catch (CloneNotSupportedException e) {
                     e.printStackTrace();
@@ -155,6 +153,8 @@ public class WhiteView extends View {
                     e.printStackTrace();
                 }
                 window.showNextFrame();
+            } else if(controller.endingGame) {
+                window.stop();
             }
 
         }

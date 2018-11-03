@@ -69,6 +69,16 @@ public class WriteToServer implements Runnable{
         }
     }
 
+    public void endGame() throws IOException {
+        lock.lock();
+        try {
+            output.writeUTF("end");
+            output.flush();
+        } finally {
+            lock.unlock();
+        }
+    }
+
     @Override
     public void run() {
 
