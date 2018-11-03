@@ -11,7 +11,6 @@ public class BlackBishopPiece extends Piece {
     }
 
 
-
     public static BlackBishopPiece getInstance() {
         if(blackBishopPiece == null) {
             blackBishopPiece = new BlackBishopPiece('b');

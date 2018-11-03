@@ -13,7 +13,7 @@ public class WhiteQueenPiece extends Piece {
 
     public static WhiteQueenPiece getInstance() {
         if(whiteQueenPiece == null) {
-            whiteQueenPiece = new WhiteQueenPiece('W');
+            whiteQueenPiece = new WhiteQueenPiece('Q');
         }
         return whiteQueenPiece;
     }

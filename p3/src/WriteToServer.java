@@ -6,7 +6,7 @@ import java.util.Queue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class WriteToServer implements Runnable {
+public class WriteToServer implements Runnable{
 
     private Socket socket;
     private DataOutputStream output;
@@ -23,13 +23,13 @@ public class WriteToServer implements Runnable {
 
 
 
-    public WriteToServer(Socket socket) {
+    public WriteToServer(Socket socket, String SessionID) {
         this.socket = socket;
         this.password = 0x5c34a15e25c9a63dL;
         this.protocolVersion = 2;
         this.gameHeaderName = "chess";
         this.gameHeaderVersion = 1;
-        this.sessionID = "smrizzo345";
+        this.sessionID = SessionID;
     }
 
     public void InitializeConnection() throws IOException {
@@ -81,9 +81,6 @@ public class WriteToServer implements Runnable {
         } catch (IOException e) {
             System.out.println("Client error: " + e.getMessage());
         }
-
-
-
 
     }
 }

@@ -1,26 +1,16 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChessModel {
+public class ChessModel extends GameModel{
 
     private final Piece [][] pieces = new Piece[9][9];
     private List<ViewObserver> Observers = new ArrayList<>();
     private Integer[] fromXY = new Integer[2];
     private Integer[] toXY = new Integer[2];
-    Character[][] piecesFromServer = new Character[9][9];
-    String ipAddress;
-    String port;
-    String SessionID;
+    private Character[][] piecesFromServer = new Character[9][9];
 
     public ChessModel() {
         initializeBoard();
-    }
-
-    public ChessModel(String ipAddress, String port, String SessionID) {
-        this.ipAddress = ipAddress;
-        this.port = port;
-        this.SessionID = SessionID;
-
     }
 
     private void initializeBoard() {
@@ -70,6 +60,44 @@ public class ChessModel {
         }
     }
 
+    public void setServerBoard(Character[][] piecesFromServer) throws CloneNotSupportedException {
+        for(int row = 1; row < 9; row++) {
+            for(int col = 1; col < 9; col++) {
+                if(piecesFromServer[row][col] == 'p') {
+                    pieces[row][col] = BlackPawnPiece.getInstance();
+                } else if(piecesFromServer[row][col] == 'P') {
+                    pieces[row][col] = WhitePawnPiece.getInstance();
+                } else if(piecesFromServer[row][col] == 'r') {
+                    pieces[row][col] = BlackRookPiece.getInstance();
+                } else if(piecesFromServer[row][col] == 'R') {
+                    pieces[row][col] = WhiteRookPiece.getInstance();
+                } else if(piecesFromServer[row][col] == 'n') {
+                    pieces[row][col] = BlackKnightPiece.getInstance();
+                } else if(piecesFromServer[row][col] == 'N') {
+                    pieces[row][col] = WhiteKnightPiece.getInstance();
+                } else if(piecesFromServer[row][col] == 'b') {
+                    pieces[row][col] = BlackBishopPiece.getInstance();
+                } else if(piecesFromServer[row][col] == 'B') {
+                    pieces[row][col] = WhiteBishopPiece.getInstance();
+                } else if(piecesFromServer[row][col] == 'q') {
+                    pieces[row][col] = BlackQueenPiece.getInstance();
+                } else if(piecesFromServer[row][col] == 'Q') {
+                    pieces[row][col] = WhiteQueenPiece.getInstance();
+                } else if(piecesFromServer[row][col] == 'k') {
+                    pieces[row][col] = BlackKingPiece.getInstance();
+                } else if (piecesFromServer[row][col] == 'K') {
+                    pieces[row][col] = WhiteKingPiece.getInstance();
+                }  else {
+                    pieces[row][col] = null;
+                }
+            }
+        }
+        for(int i = 1; i <= 4; i++) {
+            pieces[i][0] = null;
+        }
+        boardChanged();
+    }
+
 
     public void registerObserver(ViewObserver o) {
         Observers.add(o);
@@ -94,14 +122,11 @@ public class ChessModel {
     }
 
     public void setToXY(int x, int y) {
-        System.out.println("Setting destination");
         toXY[0] = x;
         toXY[1] = y;
     }
 
     public void regularMove() throws CloneNotSupportedException {
-        //Make regular move on board and notify observers
-        System.out.println("Making regular move");
         int fromX = fromXY[0];
         int fromY = fromXY[1];
         int toX = toXY[0];
@@ -116,7 +141,7 @@ public class ChessModel {
     public boolean moveAndtakePiece() throws CloneNotSupportedException {
         if(Character.isLowerCase(pieces[fromXY[0]][fromXY[1]].getText()) && Character.isUpperCase(pieces[toXY[0]][toXY[1]].getText()) ||
                 (Character.isUpperCase(pieces[fromXY[0]][fromXY[1]].getText()) && Character.isLowerCase(pieces[toXY[0]][toXY[1]].getText()))) {
-            System.out.println("Taking piece");
+
             int fromX = fromXY[0];
             int fromY = fromXY[1];
             int toX = toXY[0];
@@ -138,12 +163,9 @@ public class ChessModel {
         pieces[4][0] = WhiteKnightPiece.getInstance();
         boardChanged();
 
-        //promote white pawn at the x and y location
-
     }
 
     public void promoteBlackPawn() throws CloneNotSupportedException {
-        //promote black pawn at the x and y location
         pieces[1][0] = BlackQueenPiece.getInstance();
         pieces[2][0] = BlackRookPiece.getInstance();
         pieces[3][0] = BlackBishopPiece.getInstance();
@@ -163,9 +185,11 @@ public class ChessModel {
         boardChanged();
     }
 
+
     public void boardChanged() throws CloneNotSupportedException {
         notifyObservers();
     }
+
 
     public int getFromX() {
         return fromXY[0];
@@ -175,7 +199,16 @@ public class ChessModel {
         return fromXY[1];
     }
 
+    public int getToX() {
+        return toXY[0];
+    }
+
+    public int getToY() {
+        return toXY[1];
+    }
+
     public Piece[][] getPieces() {
         return pieces;
     }
+
 }

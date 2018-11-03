@@ -9,6 +9,8 @@ public class Main {
     public int whiteBoardCount;
     public int blackBoardCount;
     public int kibbitzerBoardCount;
+    boolean remoteGame = false;
+    boolean localGame = false;
     String[] serverCredentials;
     private static void usage() {
         System.out.println("Usage:  java Main (test | chess white | chess black | chess white/black kibbitzer | chess 18.223.24.219 6002 MySessionID)");
@@ -28,7 +30,7 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException, CloneNotSupportedException {
 
         if (args.length < 1) {
             usage();
@@ -38,9 +40,8 @@ public class Main {
         if("chess".equals(args[0])) {
             if("white".equals(args[1]) || "black".equals(args[1])) {
                 main.setCounters(args);
-                System.out.println("Number of whiteboards:" + main.whiteBoardCount);
-                System.out.println("Number of blackboards:" + main.blackBoardCount);
-                System.out.println("Number of kibbitzer boards:" + main.kibbitzerBoardCount);
+                main.localGame = true;
+
             }
             else if (args[1].substring(0, 13).equals("18.223.24.219")){
                 System.out.println("We are gonna connect to server now");
@@ -48,6 +49,7 @@ public class Main {
                 for(int i = 0; i < main.serverCredentials.length; i++) {
                     System.out.println(main.serverCredentials[i]);
                 }
+                main.remoteGame = true;
             }
             else {
                 usage();
@@ -56,8 +58,12 @@ public class Main {
             usage();
         }
         ChessModel model = new ChessModel();
-        ChessController controller = new ChessController(model, main.blackBoardCount, main.whiteBoardCount, main.kibbitzerBoardCount);
-        //controller.runThreads();
+
+        if(main.localGame) {
+            ChessController controller = new ChessController(model, main.blackBoardCount, main.whiteBoardCount, main.kibbitzerBoardCount);
+        } else if (main.remoteGame) {
+            ChessController controller = new ChessController(model, main.serverCredentials[0], Integer.parseInt(main.serverCredentials[1]), main.serverCredentials[2]);
+        }
 
 
 

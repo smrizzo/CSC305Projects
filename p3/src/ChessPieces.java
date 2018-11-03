@@ -1,11 +1,9 @@
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class ChessPieces {
     protected HashMap<String, File> pieces = new HashMap<>();
-    protected List<File> letters = new ArrayList<>();
+//    protected List<File> letters = new ArrayList<>();
 
     public ChessPieces() {
         pieces.put("blackPawn", new File("./images/black_pawn.png"));
@@ -46,7 +44,7 @@ public class ChessPieces {
         return pieces;
     }
 
-    public List<File> getLetters() { return letters; }
+//    public List<File> getLetters() { return letters; }
 
 
 }
