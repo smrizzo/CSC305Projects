@@ -36,7 +36,7 @@ public class MyTest {
     public void testCharText() throws IOException {
         ChessModel model = new ChessModel();
         Piece[][] boardPieces = model.getPieces();
-        Assert.assertEquals(boardPieces[2][1].getText(), 'p');
+        Assert.assertEquals(boardPieces[1][2].getText(), 'p');
 
     }
 
