@@ -2,13 +2,6 @@
 .swp
 .DS_Store
 
-# Image files
-*.jpg
-*.jpeg
-*.bmp
-*.png
-*.gif
-
 # Assignment descriptions and other HTML files
 *.html
 *.htm
