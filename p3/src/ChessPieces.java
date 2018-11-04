@@ -3,7 +3,6 @@ import java.util.HashMap;
 
 public class ChessPieces {
     protected HashMap<String, File> pieces = new HashMap<>();
-//    protected List<File> letters = new ArrayList<>();
 
     public ChessPieces() {
         pieces.put("blackPawn", new File("./images/black_pawn.png"));
@@ -43,8 +42,5 @@ public class ChessPieces {
     public HashMap<String, File> getImageFiles() {
         return pieces;
     }
-
-//    public List<File> getLetters() { return letters; }
-
 
 }

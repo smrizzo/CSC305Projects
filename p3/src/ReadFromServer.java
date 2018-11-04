@@ -16,6 +16,7 @@ public class ReadFromServer implements Runnable {
     private Character mColorOfPlayer = '\0';
     private String initialCommand = "";
     private String initialBoard = "";
+    private volatile boolean done = false;
     private ReentrantLock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
     private Queue<String> myQueue = new LinkedList<>();
@@ -85,6 +86,10 @@ public class ReadFromServer implements Runnable {
 
     }
 
+    public void shutDown() {
+        done = true;
+    }
+
     @Override
     public void run() {
         try {
@@ -104,11 +109,13 @@ public class ReadFromServer implements Runnable {
             initialBoard = input.readUTF();
             addToInitialQueue(initialBoard);
 
-            while(true) {
+            while(!done) {
 
                 response = input.readUTF();
                 if(response.equals("end")) {
-                    break;
+                    addString(response);
+                    addString(response);
+                    shutDown();
                 } else {
                     addString(response);
                     response = input.readUTF();
@@ -116,9 +123,13 @@ public class ReadFromServer implements Runnable {
                 }
 
             }
-            socket.close();
+            input.close();
+
         } catch (IOException e) {
             System.out.println("Client error: " + e.getMessage());
+            Thread.currentThread().interrupt();
+
+
         }
     }
 }

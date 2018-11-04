@@ -6,46 +6,35 @@ import java.util.List;
 public class ChessController implements ViewObserver{
 
     private ChessModel model;
+    private Main main;
+    private Integer controllerID;
     protected boolean initialClick;
     private boolean pieceClicked;
-    private boolean madeMove;
     protected boolean pawnMadeIt;
     protected int firstClickX;
     protected int firstClicky;
     protected boolean mWhiteBoard;
     protected boolean mBlackBoard;
-    private int numberOfBlackBoards;
-    private int numberOfWhiteBoards;
-    private int numberOfKibbitzers;
-    protected boolean connectToServer;
-    Piece[][] pieces;
-    List<Thread> threads = new ArrayList<>();
-
+    private Piece[][] pieces;
+    private List<Thread> threads = new ArrayList<>();
     private Character[][] piecesFromServer = new Character[9][9];
-    private String ipAddress;
-    private Integer port;
-    private String SessionID;
     private Socket socket;
-    Thread write;
-    Thread readFrom;
+    private Thread write;
+    private Thread readFrom;
     private WriteToServer writeToServer;
     private ReadFromServer readFromServer;
-    List<String> myInitialList;
-    List<String> myList;
+    private List<String> myInitialList;
+    private List<String> myList;
     private boolean kibbitzerConnected = false;
     private boolean remoteGameConnected = false;
-    boolean endingGame;
+    protected volatile boolean endingGame;
 
     public ChessController(ChessModel model, int numberOfBlackBoards, int numberOfWhiteBoards, int numberOfKibbitzers) throws IOException {
         this.model = model;
         this.pieces = model.getPieces();
         model.registerObserver(this);
-        this.numberOfBlackBoards = numberOfBlackBoards;
-        this.numberOfWhiteBoards = numberOfWhiteBoards;
-        this.numberOfKibbitzers = numberOfKibbitzers;
         this.initialClick = false;
         this.pieceClicked = false;
-        this.madeMove = false;
         this.pawnMadeIt = false;
         this.endingGame = false;
 
@@ -71,21 +60,18 @@ public class ChessController implements ViewObserver{
         runThreads();
     }
 
-    public ChessController(ChessModel model, String ipAddress, Integer port, String SessionID) throws IOException, InterruptedException, CloneNotSupportedException {
+    public ChessController(ChessModel model, Integer ControllerID, String ipAddress, Integer port, String SessionID) throws IOException, InterruptedException, CloneNotSupportedException {
         this.model = model;
         this.pieces = model.getPieces();
-        this.ipAddress = ipAddress;
-        this.port = port;
+        this.controllerID = ControllerID;
         model.registerObserver(this);
         this.initialClick = false;
         this.pieceClicked = false;
-        this.madeMove = false;
         this.pawnMadeIt = false;
         this.endingGame = false;
-        this.SessionID = SessionID;
         socket = new Socket(ipAddress, port);
         remoteGameConnected = true;
-        writeToServer = new WriteToServer(socket, this.SessionID);
+        writeToServer = new WriteToServer(socket, SessionID);
         readFromServer = new ReadFromServer(socket);
         write = new Thread(writeToServer);
         readFrom = new Thread(readFromServer);
@@ -93,10 +79,13 @@ public class ChessController implements ViewObserver{
         readFrom.start();
         InitialResponse();
         getResponseFromServer();
+        writeToServer.closeWriteStream();
+        socket.close();
 
     }
 
     public void InitialResponse() throws InterruptedException, IOException, CloneNotSupportedException {
+        System.out.println("Waiting for other player....");
         myInitialList = readFromServer.getInitialResponse();
         if(myInitialList.get(1).charAt(0) == '\0') {
             kibbitzerConnected = true;
@@ -105,10 +94,7 @@ public class ChessController implements ViewObserver{
         } else if(myInitialList.get(1).charAt(0) == 'b') {
             setBlackBoard();
         }
-//        for(int i = 0; i < myInitialList.size(); i++) {
-//            System.out.println(myInitialList.get(i));
-//        }
-//        System.out.print("\n");
+
         parseBoard(myInitialList.get(3));
         if(kibbitzerConnected) {
             addKibbitzerView();
@@ -122,19 +108,18 @@ public class ChessController implements ViewObserver{
 
     }
 
+
     public void getResponseFromServer() throws InterruptedException, CloneNotSupportedException {
 
-        while(true) {
+        while(!endingGame) {
 
             myList = readFromServer.getResponse();
             if(myList.get(0).equals("board")) {
                 parseBoard(myList.get(1));
                 model.setServerBoard(piecesFromServer);
+            } else if(myList.get(0).equals("end")) {
+                break;
             }
-
-//            for(int i = 0; i < myList.size(); i++) {
-//                System.out.println(myList.get(i));
-//            }
 
         }
     }
@@ -174,6 +159,7 @@ public class ChessController implements ViewObserver{
         for(int i = 0; i < threads.size(); i++) {
             threads.get(i).start();
         }
+
     }
 
     private void setWhiteBoard() {
@@ -187,25 +173,15 @@ public class ChessController implements ViewObserver{
     }
 
     public void endingGame() throws IOException {
-        if(connectToServer) {
+        if(remoteGameConnected) {
             writeToServer.endGame();
 
         }
         endingGame = true;
     }
 
-    public void keyBoardPromotePawn() throws CloneNotSupportedException {
-        if(mBlackBoard) {
-            model.promoteBlackPawn();
-        } else {
-            model.promoteWhitePawn();
-        }
-    }
-
     public void clickedPiece(int x, int y) throws CloneNotSupportedException, IOException {
-      //System.out.println("We need to do something with this click: " + x + ", " + y);
         if(pieces[x][y] != null && !initialClick && !pieceClicked) {
-            //System.out.println("Initialclick");
             if((y == 1 && pieces[x][y] instanceof WhitePawnPiece)) {
                 model.promoteWhitePawn();
                 pawnMadeIt = true;
@@ -248,7 +224,6 @@ public class ChessController implements ViewObserver{
         } else if(pieceClicked && initialClick && x == this.firstClickX && y == this.firstClicky) {
             pieceClicked = true;
             initialClick = true;
-            //System.out.println("Got here");
 
         } else if (pieceClicked && pawnMadeIt && y == 0 && (x >= 1 && x <= 4)){
             model.setToXY(x, y);
@@ -277,6 +252,6 @@ public class ChessController implements ViewObserver{
         this.pieces = m.getPieces();
         initialClick = false;
         pieceClicked = false;
-        madeMove = false;
+
     }
 }

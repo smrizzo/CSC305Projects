@@ -1,9 +1,6 @@
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class WriteToServer implements Runnable{
@@ -15,12 +12,8 @@ public class WriteToServer implements Runnable{
     private String gameHeaderName;
     private int gameHeaderVersion;
     private String sessionID;
+    private volatile boolean done;
     private ReentrantLock lock = new ReentrantLock();
-    private Condition condition = lock.newCondition();
-    String command = "";
-    private Queue<Integer> myNumList = new LinkedList<>();
-    boolean madeMove = false;
-
 
 
     public WriteToServer(Socket socket, String SessionID) {
@@ -30,6 +23,7 @@ public class WriteToServer implements Runnable{
         this.gameHeaderName = "chess";
         this.gameHeaderVersion = 1;
         this.sessionID = SessionID;
+        this.done = false;
     }
 
     public void InitializeConnection() throws IOException {
@@ -74,9 +68,14 @@ public class WriteToServer implements Runnable{
         try {
             output.writeUTF("end");
             output.flush();
+            done = true;
         } finally {
             lock.unlock();
         }
+    }
+
+    public void closeWriteStream() throws IOException {
+        output.close();
     }
 
     @Override
@@ -90,6 +89,8 @@ public class WriteToServer implements Runnable{
 
         } catch (IOException e) {
             System.out.println("Client error: " + e.getMessage());
+            System.out.println("catch in write");
+            Thread.currentThread().interrupt();
         }
 
     }

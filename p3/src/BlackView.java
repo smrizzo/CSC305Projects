@@ -2,8 +2,17 @@ import edu.calpoly.spritely.*;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class BlackView extends View {
+
+    private Character borderChars[] = {'a', 'b', 'c', 'd','e','f','g','h'};
+    private java.util.List<Character> myCharList = Arrays.asList(borderChars);
+    private Character borderNumbers[] = new Character[]{'8', '7', '6', '5', '4', '3', '2', '1'};
+    private ArrayList<Character> textMove = new ArrayList<>(4);
+    private List<Character> myNumList = Arrays.asList(borderNumbers);
 
     public BlackView(ChessModel model, ChessController controller) {
         super(model, controller);
@@ -25,7 +34,7 @@ public class BlackView extends View {
         }
 
         if(controller.initialClick) {
-            frame.addTile(controller.firstClickX, 9- controller.firstClicky, new SolidColorTile(Color.ORANGE, 'o'));
+            frame.addTile(controller.firstClickX, 9 - controller.firstClicky, new SolidColorTile(Color.ORANGE, 'o'));
         }
 
         for(int row = 0; row < 9; row++) {
@@ -73,6 +82,7 @@ public class BlackView extends View {
                         frame.addTile(row, col, new ImageTile(imagefiles.get("8"), new Size(pixelSize, pixelSize), '8'));
                     }
                 } else {
+                    //This is for promoting of the pawn
                     if (pieces[row][col] instanceof WhiteRookPiece) {
                         frame.addTile(row, col, new ImageTile(imagefiles.get("whiteRook"), new Size(pixelSize, pixelSize), pieces[row][col].getText()));
                     } else if (pieces[row][col] instanceof BlackRookPiece) {
@@ -97,6 +107,44 @@ public class BlackView extends View {
                 }
 
             }
+        }
+    }
+
+    public void setKeyClick(char c) throws CloneNotSupportedException, IOException {
+        textMove.add(c);
+
+        if(textMove.get(0) == '\n') {
+            textMove.remove(0);
+        } else if (textMove.size() == 1 && textMove.get(0).equals('q')) {
+            controller.endingGame();
+            //System.exit(0);
+        }
+
+        if(textMove.size() == 4) {
+
+            textMove.remove(0);
+            textMove.remove(0);
+            Integer finishRow = myCharList.indexOf(textMove.get(0)) + 1;
+            Integer finishCol = myNumList.indexOf(textMove.get(1)) + 1;
+            if(controller.mBlackBoard) {
+                controller.clickedPiece(finishRow, 9 - finishCol);
+            } else {
+                controller.clickedPiece(finishRow, finishCol);
+            }
+
+            textMove.remove(0);
+            textMove.remove(0);
+            System.out.println("\n");
+
+        } else if (textMove.size() == 2) {
+            Integer startRow = myCharList.indexOf(textMove.get(0)) + 1;
+            Integer startCol = myNumList.indexOf(textMove.get(1)) + 1;
+            if(controller.mBlackBoard) {
+                controller.clickedPiece(startRow, 9 - startCol);
+            } else{
+                controller.clickedPiece(startRow, startCol);
+            }
+
         }
     }
 
@@ -146,7 +194,6 @@ public class BlackView extends View {
             }
 
             if(boardChanged) {
-                System.out.println("Board changed so re-render board");
                 try {
                     updateBoard(newFrame);
                 } catch (IOException e) {
@@ -163,8 +210,10 @@ public class BlackView extends View {
                 window.showNextFrame();
             } else if(controller.endingGame) {
                 window.stop();
+
             }
 
         }
+
     }
 }
