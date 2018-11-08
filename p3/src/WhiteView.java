@@ -209,8 +209,6 @@ public class WhiteView extends View {
                 window.stop();
                 //System.exit(0);
             }
-
         }
-
     }
 }
