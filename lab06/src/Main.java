@@ -27,10 +27,14 @@ public class Main {
             }
         }
 
-
-        for(Integer value: myMap.values()) {
-            threads.add(new Thread(new StarModel(value)));
+        for(String key: myMap.keySet()) {
+            Integer value = myMap.get(key);
+            threads.add(new Thread(new StarModel(value, key)));
         }
+
+//        for(Integer value: myMap.values()) {
+//            threads.add(new Thread(new StarModel(value)));
+//        }
 
         for(int i = 0; i < threads.size(); i++) {
             threads.get(i).start();

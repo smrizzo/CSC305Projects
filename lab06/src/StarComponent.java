@@ -2,14 +2,14 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 
 
-public class StarComponent extends Component implements myObserver {
+public class StarComponent extends Component implements CompObserver {
     public StarModel model;
     private Circle [][]circle;
 
     public StarComponent(StarModel model) {
         this.model = model;
         this.circle = model.getCircles();
-        model.registerObserver(this);
+        model.registerCompObserver(this);
     }
 
     public void paint(Graphics gIn)  {
@@ -43,9 +43,8 @@ public class StarComponent extends Component implements myObserver {
         this.model = model;
     }
 
-
     @Override
-    public void updateStar(StarModel m) {
+    public void updateComponent(StarModel m) {
         this.model = m;
         this.circle = m.getCircles();
     }

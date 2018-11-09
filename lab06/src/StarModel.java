@@ -1,8 +1,6 @@
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -10,7 +8,8 @@ public class StarModel implements Runnable{
 
 
     private Circle [][] circles = new Circle[17][25];
-    private List<myObserver> Observers = new ArrayList<>();
+    private List<ViewObserver> Observers = new ArrayList<>();
+    private List<CompObserver> compObservers = new ArrayList<>();
     private HashMap<Integer, Circle> mapForRandom = new HashMap<>();
     private List<StarUI> starUIS = new ArrayList<>();
     private int numOfUi;
@@ -19,11 +18,11 @@ public class StarModel implements Runnable{
     private boolean done = false;
     Integer numOfCircles = 0;
 
-    public StarModel(int numOfUI) {
+    public StarModel(int numOfUI, String keyName) {
         initializeStar();
         this.numOfUi = numOfUI;
         for(int i = 0; i < numOfUI; i++) {
-            starUIS.add(new StarUI(this));
+            starUIS.add(new StarUI(this,keyName));
         }
         for(int i = 0; i < numOfUI; i++) {
             starUIS.get(i).setFrameVisible(true);
@@ -85,18 +84,42 @@ public class StarModel implements Runnable{
         return circles;
     }
 
-    public void registerObserver(myObserver o) {
+    public void removeViewObserver(ViewObserver o) {
+        int i = Observers.indexOf(o);
+        if(i >= 0) {
+            Observers.remove(i);
+        }
+    }
+
+    public void removeCompObserver(CompObserver o) {
+        int i = compObservers.indexOf(o);
+        if(i >= 0) {
+            compObservers.remove(i);
+        }
+    }
+
+    public void registerViewObserver(ViewObserver o) {
         Observers.add(o);
     }
 
-    public void notifyObservers() {
-        for(myObserver o: Observers) {
+    public void registerCompObserver(CompObserver o) {
+        compObservers.add(o);
+    }
+
+    public void notifyViewObservers() {
+        for(ViewObserver o: Observers) {
             o.updateStar(this);
+        }
+    }
+    public void notifyCompObservers() {
+        for(CompObserver o: compObservers) {
+            o.updateComponent(this);
         }
     }
 
     public void starChanged() {
-        notifyObservers();
+        notifyCompObservers();
+        notifyViewObservers();
     }
 
     public void shutDown() {
@@ -116,12 +139,16 @@ public class StarModel implements Runnable{
 
 
         long startTime = System.nanoTime();
+        long currentTime = 0;
         while(!done) {
             startTime = startTime + 1000000000;
             lock.lock();
             try {
-                while(System.nanoTime() - startTime < 0) {
-                    condition.awaitNanos(startTime - System.nanoTime());
+                while((currentTime = System.nanoTime()) - startTime < 0) {
+                    if(Observers.size() < 1) {
+                        shutDown();
+                    }
+                    condition.awaitNanos(startTime - currentTime);
                 }
                 changeRandomColor();
                 starChanged();
