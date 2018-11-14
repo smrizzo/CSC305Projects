@@ -1,34 +1,47 @@
 import java.awt.*;
 import java.util.Random;
 
-public class Circle {
+public class Marble {
+    private Marble[] adjacentMarbles = new Marble[5];
     private Integer x;
     private Integer y;
     private double pixelsHeight;
     private double pixelsWidth;
     private Color color;
-    private Color someColor;
-    private boolean hasCircle;
+    private Integer marbleID;
+    private boolean hasMarble;
+    private Integer player;
     Random rand = new Random();
 
-    public Circle(Integer y, Integer x, Color color, boolean hasCircle) {
+    public Marble(Integer id, Integer y, Integer x, Integer player, boolean hasMarble) {
+        this.marbleID = id;
         this.x = x;
         this.y = y;
-        this.someColor = color;
-        this.color = new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
-
+        this.hasMarble = hasMarble;
+        this.player = player;
     }
 
     public void transformToPixels(double width, double height) {
         double pixelHeightTicks = (height /18);
-        //System.out.println("pixel height ticks:" + pixelHeightTicks);
         double pixelWidthTicks = width /32;
-        //System.out.println("pixel width ticks:" + pixelWidthTicks);
         this.pixelsHeight = pixelHeightTicks * y;
-        //System.out.println("pixelsHeight" + this.pixelsHeight);
         this.pixelsWidth = pixelWidthTicks * x;
     }
 
+    public void setPlayer(Integer player) {
+        this.player = player;
+    }
+
+    public Integer getPlayer() {
+        return this.player;
+    }
+
+    public void setHasMarble(boolean hasMarble) {
+        this.hasMarble = hasMarble;
+    }
+    public Integer getMarbleID() {
+        return marbleID;
+    }
 
     public void setX(Integer x) {
         this.x = x;
@@ -42,17 +55,8 @@ public class Circle {
         this.color = color;
     }
 
-    public Integer getY() {
-
-        return y;
-    }
-
     public Color getColor() {
         return color;
-    }
-
-    public Integer getX() {
-        return x;
     }
 
     public double getPixelsHeight() {
@@ -63,7 +67,4 @@ public class Circle {
         return pixelsWidth;
     }
 
-    public boolean isHasCircle() {
-        return hasCircle;
-    }
 }

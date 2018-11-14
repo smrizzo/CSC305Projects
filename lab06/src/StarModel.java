@@ -34,6 +34,8 @@ public class StarModel implements Runnable{
         for(int y = 0; y <= 16; y++) {
             for(int x = 0; x <= 24; x++) {
                 if(y - 8 == -8 && x - 12 == 0 || y - 8 == 8 && x - 12 == 0) {
+                    System.out.println("x:" + x);
+                    System.out.println("y: " +  y);
                     circles[y][x] = new Circle(y, x, Color.BLUE, true);
                     numOfCircles++;
                     mapForRandom.put(numOfCircles, circles[y][x]);

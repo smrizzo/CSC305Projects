@@ -17,23 +17,23 @@ public class StarUI implements ViewObserver{
     private JFrame frame;
     private Component contents;
     private StarModel model;
+    private CCController controller;
 
-    public StarUI(StarModel model, String name) {
+    public StarUI(CCController controller, StarModel model, String name) {
+        this.controller = controller;
         this.model = model;
         model.registerViewObserver(this);
         this.frame = new JFrame("Star's Hollow-" + name);
-        this.frame.setMinimumSize(new Dimension(400, 400));
-        System.out.println("Height: " + frame.getHeight());
-        System.out.println("Width: " + frame.getWidth());
+        this.frame.setMinimumSize(new Dimension(500, 500));
         this.frame.setLayout(new BorderLayout());
-        contents =  new StarComponent(model);
+        contents =  new StarComponent(controller, model);
         this.frame.add(contents);
         frame.addWindowListener(new WindowAdapter() {
             @Override public void windowClosing(WindowEvent e) {
                 notifyWindowClosing();
             }
         });
-        contents.addMouseListener(new MouseListener() {
+        this.frame.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 notifyLocation(e.getX(), e.getY());
@@ -55,14 +55,8 @@ public class StarUI implements ViewObserver{
     }
 
     private void notifyLocation(int x, int y) {
-
-        System.out.println("clicked x:" + x);
-        System.out.println("clicked y:" + y);
-        Dimension size = contents.getSize();
-        double componentH = size.getHeight();
-        double componentW = size.getWidth();
-        double minDimension = Math.min(componentH, componentW);
-        System.out.println("x: " + (int)((x - 25) / (componentW/32)) + ", " + "y: " + (int)(y/(componentH/18)));
+            controller.foundClick(x, y);
+//        System.out.println("x: " + (int)((x - 25.0) / (componentW/32)) + ", " + "y: " +  (int)((y - 10.0)/(componentH/18)));
 
     }
 

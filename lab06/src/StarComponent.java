@@ -17,9 +17,12 @@ public class StarComponent extends Component implements CompObserver {
         Dimension size = getSize();
         double componentH = size.getHeight();
         double componentW = size.getWidth();
+        //System.out.println("compenentH: " + componentH);
+        //System.out.println("compenentW: " + componentW);
+
         double minDimension = Math.min(componentH, componentW);
 
-        g.setColor(Color.black);
+        g.setColor(Color.BLACK);
         g.fillRect(0, 0, size.width, size.height);
 
 
@@ -27,11 +30,11 @@ public class StarComponent extends Component implements CompObserver {
             for(int x = 0; x < 25; x++) {
                 if(circle[y][x] != null) {
                     circle[y][x].transformToPixels(componentW, componentH);
-                    double X = circle[y][x].getPixelsWidth() + 5;
-                    double Y = circle[y][x].getPixelsHeight() + 10;
-                    double w = minDimension / 16.0;
-                    double h = minDimension / 16.0;
-                    Ellipse2D e = new Ellipse2D.Double(X-w/12.0, Y-h/12.0, w, h);
+                    double X = circle[y][x].getPixelsWidth() + 25; // + 5
+                    double Y = circle[y][x].getPixelsHeight(); //+ 10
+                    double w = minDimension /16;
+                    double h = minDimension/ 16;
+                    Ellipse2D e = new Ellipse2D.Double(X, Y, w, h);
                     g.setColor(circle[y][x].getColor());
                     g.fill(e);
                 }
