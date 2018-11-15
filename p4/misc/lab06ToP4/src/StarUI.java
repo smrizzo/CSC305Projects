@@ -6,25 +6,35 @@
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
 
 public class StarUI implements ViewObserver{
 
     private JFrame frame;
+    private JButton button;
     private Component contents;
     private StarModel model;
     private CCController controller;
+    private Image myImage;
 
     public StarUI(CCController controller, StarModel model, String name) {
         this.controller = controller;
         this.model = model;
         model.registerViewObserver(this);
         this.frame = new JFrame("Star's Hollow-" + name);
-        this.frame.setMinimumSize(new Dimension(500, 500));
+
+        ImageIcon myIcon  = new ImageIcon("./Images/undoButton.png");
+        myImage = myIcon.getImage();
+        Image newimg = myImage.getScaledInstance(50, 50,  java.awt.Image.SCALE_SMOOTH);
+        myIcon = new ImageIcon(newimg);
+        this.button = new JButton(myIcon);
+        this.button.setBounds(20, 20, 50, 50);
+        button.setBorder(BorderFactory.createEmptyBorder());
+        button.setActionCommand("undoLastMove");
+        this.frame.add(button);
+
+        this.frame.setMinimumSize(new Dimension(600, 600));
         this.frame.setLayout(new BorderLayout());
         contents =  new StarComponent(controller, model);
         this.frame.add(contents);
@@ -52,7 +62,16 @@ public class StarUI implements ViewObserver{
             public void mouseExited(MouseEvent e) {}
         });
 
+        this.button.addActionListener(e -> undoButtonClicked(e));
+
     }
+
+    public void undoButtonClicked(ActionEvent e) {
+        System.out.println("Button was clicked");
+        controller.buttonClicked(e.getActionCommand());
+    }
+
+
 
     private void notifyLocation(int x, int y) {
             controller.foundClick(x, y);

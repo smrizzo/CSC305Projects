@@ -2,18 +2,20 @@ import java.awt.*;
 import java.util.Random;
 
 public class Marble {
-    private Marble[] adjacentMarbles = new Marble[5];
+    private Marble[] adjacentMarbles = new Marble[6];
     private Integer x;
     private Integer y;
     private double pixelsHeight;
     private double pixelsWidth;
+    private Piece player;
     private Color color;
     private Integer marbleID;
     private boolean hasMarble;
-    private Integer player;
+    private boolean pieceClicked = false;
+    //private Integer player;
     Random rand = new Random();
 
-    public Marble(Integer id, Integer y, Integer x, Integer player, boolean hasMarble) {
+    public Marble(Integer id, Integer y, Integer x, Piece player, boolean hasMarble) {
         this.marbleID = id;
         this.x = x;
         this.y = y;
@@ -28,16 +30,24 @@ public class Marble {
         this.pixelsWidth = pixelWidthTicks * x;
     }
 
-    public void setPlayer(Integer player) {
+    public void setPlayer(Piece player) {
         this.player = player;
     }
 
-    public Integer getPlayer() {
+    public void pieceClicked() {
+        pieceClicked = true;
+    }
+
+    public Piece getPlayer() {
         return this.player;
     }
 
     public void setHasMarble(boolean hasMarble) {
         this.hasMarble = hasMarble;
+    }
+
+    public boolean getHasMarble() {
+        return this.hasMarble;
     }
     public Integer getMarbleID() {
         return marbleID;
