@@ -2,6 +2,7 @@ import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.awt.*;
 
 public class CCController implements ViewObserver{
 
@@ -11,6 +12,9 @@ public class CCController implements ViewObserver{
     private List<StarUI> starUIS = new ArrayList<>();
     protected boolean initialClick = false;
     private boolean pieceClicked = false;
+    protected boolean gotAllMoves = false;
+    //List<Point> listOfMoves;
+    HashMap<Point, Color> listOfMoves;
 
     private CCMove movePiece;
 
@@ -45,11 +49,17 @@ public class CCController implements ViewObserver{
         for(MarbleViewTracker marble: marbleViewTracker) {
             if(doesContain(marble,x,y) && isPlayersTurn(marble.getPoint().x, marble.getPoint().y)) {
                 model.setFromXY(marble.getPoint().x, marble.getPoint().y);
+                model.getAllMoves();
+//                for(Point point: listOfMoves) {
+//                    System.out.println("Found places to go at: " + point.y + ", " + point.x);
+//                }
+                gotAllMoves = true;
                 pieceClicked = true;
                 break;
 
             } else if (doesContain(marble, x, y) && !isPlayersTurn(marble.getPoint().x, marble.getPoint().y) && pieceClicked) {
                 model.setToXY(marble.getPoint().x, marble.getPoint().y);
+                gotAllMoves = false;
                 movePiece.execute();
                 pieceClicked = false;
                 break;
@@ -60,8 +70,13 @@ public class CCController implements ViewObserver{
         }
     }
 
+//    public List<Point> getListOfMoves() {
+//        return listOfMoves;
+//    }
+
     public void buttonClicked(String command) {
         System.out.println("Got inside button clicked");
+        gotAllMoves = false;
         movePiece.undo();
     }
 

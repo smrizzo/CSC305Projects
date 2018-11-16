@@ -2,7 +2,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class Marble {
-    private Marble[] adjacentMarbles = new Marble[6];
+    public Marble[] adjMarbles = new Marble[6];
     private Integer x;
     private Integer y;
     private double pixelsHeight;
@@ -51,6 +51,14 @@ public class Marble {
     }
     public Integer getMarbleID() {
         return marbleID;
+    }
+
+    public Integer getMarbleX() {
+        return x;
+    }
+
+    public Integer getMarbleY() {
+        return y;
     }
 
     public void setX(Integer x) {

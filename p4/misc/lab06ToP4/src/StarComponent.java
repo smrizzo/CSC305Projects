@@ -1,13 +1,17 @@
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.util.HashMap;
 
 
 public class StarComponent extends Component implements CompObserver {
     public StarModel model;
     private CCController controller;
     private Marble[][] marble;
+    private Color allMovesColor = Color.WHITE;
     private Color[] colors = {Color.RED, Color.pink, Color.BLUE, Color.GREEN, Color.DARK_GRAY, Color.ORANGE};
     private PlayerTriangle tri;
+    //private List<Point> listOfMoves;
+    private HashMap<Point, Color> listOfMoves;
 
     public StarComponent(CCController controller, StarModel model) {
         this.controller = controller;
@@ -28,11 +32,33 @@ public class StarComponent extends Component implements CompObserver {
         g.setColor(Color.GRAY);
         g.fillRect(0, 0, size.width, size.height);
 
+
+
         if(model.getState().getText() == '1') {
-            tri = new Player1Triangle(gIn, componentW, componentH);
+            //tri = new Player1Triangle(gIn, componentW, componentH);
+            colorUpdate = colors[0];
         } else if(model.getState().getText() == '2') {
-            tri = new Player2Triangle(gIn, componentW, componentH);
+            //tri = new Player2Triangle(gIn, componentW, componentH);
+            colorUpdate = colors[1];
+        } else if(model.getState().getText() == '3'){
+            colorUpdate = colors[2];
+        } else if (model.getState().getText() == '4') {
+            colorUpdate = colors[3];
+        } else if (model.getState().getText() == '5') {
+            colorUpdate = colors[4];
+        } else if (model.getState().getText() == '6') {
+            colorUpdate = colors[5];
+        } else {
+            colorUpdate = Color.WHITE;
         }
+
+        g.setColor(colorUpdate);
+        g.drawRoundRect(450, 20, 115, 40, 10, 10);
+        g.fillRoundRect(450, 20, 115, 40, 10, 10);
+        g.setFont(new Font("TimesRoman", Font.BOLD, 30));
+        g.setColor(Color.BLACK);
+        g.drawString("Player " + model.getState().getText(), 455, 50);
+
 
         for(int y = 0; y < 17; y++) {
             for(int x = 0; x < 25; x++) {
@@ -56,12 +82,21 @@ public class StarComponent extends Component implements CompObserver {
                         colorUpdate = colors[4];
                     } else if (marble[y][x].getPlayer() instanceof Player6Marble) {
                         colorUpdate = colors[5];
-                    } else {
+                    }  else {
                         colorUpdate = Color.BLACK;
                     }
                     controller.addMarbleTracker(new MarbleViewTracker(e, colorUpdate, new Point(x, y)));
+
+                    if(controller.gotAllMoves) {
+                        Point newPoint = new Point(x, y);
+                        if(listOfMoves.containsKey(newPoint)) {
+                            colorUpdate = Color.WHITE;
+                        }
+                    }
+
                     g.setColor(colorUpdate);
                     g.fill(e);
+
                 }
 
             }
@@ -70,12 +105,15 @@ public class StarComponent extends Component implements CompObserver {
 
     public void setModel(StarModel model) {
         this.model = model;
+
     }
 
     @Override
     public void updateComponent(StarModel m) {
         this.model = m;
         this.marble = m.getMarbles();
+        //this.listOfMoves = model.getMoveList();
+        this.listOfMoves = model.getListMap();
     }
 }
 

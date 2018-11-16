@@ -9,7 +9,7 @@ public class InitialClick implements Command {
 
     @Override
     public void execute() {
-        model.setFromXY(x, y);
+
     }
 
     @Override
