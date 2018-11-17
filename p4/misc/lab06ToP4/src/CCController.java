@@ -50,33 +50,31 @@ public class CCController implements ViewObserver{
             if(doesContain(marble,x,y) && isPlayersTurn(marble.getPoint().x, marble.getPoint().y)) {
                 model.setFromXY(marble.getPoint().x, marble.getPoint().y);
                 model.getAllMoves();
-//                for(Point point: listOfMoves) {
-//                    System.out.println("Found places to go at: " + point.y + ", " + point.x);
-//                }
+
                 gotAllMoves = true;
                 pieceClicked = true;
                 break;
 
             } else if (doesContain(marble, x, y) && !isPlayersTurn(marble.getPoint().x, marble.getPoint().y) && pieceClicked) {
                 model.setToXY(marble.getPoint().x, marble.getPoint().y);
-                gotAllMoves = false;
-                movePiece.execute();
-                pieceClicked = false;
+
+                if(model.validMove()) {
+                    gotAllMoves = false;
+                    movePiece.execute();
+                    pieceClicked = false;
+                }
+
                 break;
 
-
             }
-
         }
     }
 
-//    public List<Point> getListOfMoves() {
-//        return listOfMoves;
-//    }
 
     public void buttonClicked(String command) {
         System.out.println("Got inside button clicked");
         gotAllMoves = false;
+        pieceClicked = false;
         movePiece.undo();
     }
 

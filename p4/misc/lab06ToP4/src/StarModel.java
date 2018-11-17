@@ -13,6 +13,7 @@ public class StarModel {
     private Stack<MoveSnapshot> moveHistory = new Stack<>();
     private List<Point> moveList = new ArrayList<>();
     private HashMap<Point, Color> listMap = new HashMap<>();
+    private Marble srcMarble;
     final static int kDir = 6;
 
     final static Piece PLAYER_1 = Player1Marble.getInstance();
@@ -23,13 +24,8 @@ public class StarModel {
     final static Piece PLAYER_6 = Player6Marble.getInstance();
     private Piece state = null;
 
-    private HashMap<Point, Piece> player1Home = new HashMap<>();
-    private HashMap<Point, Piece> player2Home = new HashMap<>();
-    private HashMap<Point, Piece> player3Home = new HashMap<>();
-    private HashMap<Point, Piece> player4Home = new HashMap<>();
-    private HashMap<Point, Piece> player5Home = new HashMap<>();
-    private HashMap<Point, Piece> player6Home = new HashMap<>();
-
+    private HashMap<Point, Piece> playersHomes = new HashMap<>();
+    private HashMap<Point, Piece> dstTriangles = new HashMap<>();
 
     private HashMap<Integer, Marble> mapForMarbles = new HashMap<>();
     private List<Marble> myMarbles = new ArrayList<>();
@@ -91,27 +87,27 @@ public class StarModel {
             if (i <= 10) {
                 mapForMarbles.get(i).setPlayer(Player4Marble.getInstance());
                 mapForMarbles.get(i).setHasMarble(true);
-                player4Home.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player4Marble.getInstance());
+                playersHomes.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player4Marble.getInstance());
             } else if((i >= 11 && i <= 14) || (i >= 24 && i <= 26) || (i >=36 && i <= 37) || i == 47) {
                 mapForMarbles.get(i).setPlayer(Player5Marble.getInstance());
                 mapForMarbles.get(i).setHasMarble(true);
-                player5Home.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player5Marble.getInstance());
+                playersHomes.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player5Marble.getInstance());
             } else if ((i >= 20 && i <= 23) || (i >= 33 && i <= 35) || (i >= 45 && i <= 46) || i == 56){
                 mapForMarbles.get(i).setPlayer(Player3Marble.getInstance());
                 mapForMarbles.get(i).setHasMarble(true);
-                player3Home.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player3Marble.getInstance());
+                playersHomes.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player3Marble.getInstance());
             } else if ((i == 66) || (i >= 76 && i <= 77) || (i >= 87 && i <= 89) || (i >= 99 && i <= 102)) {
                 mapForMarbles.get(i).setPlayer(Player6Marble.getInstance());
                 mapForMarbles.get(i).setHasMarble(true);
-                player6Home.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player6Marble.getInstance());
+                playersHomes.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player6Marble.getInstance());
             } else if ((i == 75) || (i >= 85 && i <= 86) || (i >= 96 && i <= 98) || (i >= 108 && i <= 111)) {
                 mapForMarbles.get(i).setPlayer(Player2Marble.getInstance());
                 mapForMarbles.get(i).setHasMarble(true);
-                player2Home.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player2Marble.getInstance());
+                playersHomes.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player2Marble.getInstance());
             } else if((i >= 112 && i <= 115) || (i >= 116 && i <= 118) || (i >= 119 && i <= 120) || i == 121) {
                 mapForMarbles.get(i).setPlayer(Player1Marble.getInstance());
                 mapForMarbles.get(i).setHasMarble(true);
-                player1Home.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player1Marble.getInstance());
+                playersHomes.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player1Marble.getInstance());
             }
         }
     }
@@ -178,8 +174,14 @@ public class StarModel {
     }
 
     private boolean regMove(Marble marble, int dir) {
-        if (marble.adjMarbles[dir] != null && !marble.adjMarbles[dir].getHasMarble()) return true;
-        else return false;
+        if(!isValidRegMove(marble, dir)) {
+            return false;
+        }
+
+        if (marble.adjMarbles[dir] != null && !marble.adjMarbles[dir].getHasMarble()) {
+            return true;
+        }
+        return false;
     }
 
     private boolean canJump(Marble marble, int dir) {
@@ -200,8 +202,24 @@ public class StarModel {
         return true;
     }
 
-    public boolean isValid(Marble marble, int dir) {
+    public boolean isValidRegMove(Marble marble, int dir) {
+        if(marble.adjMarbles[dir] == null){
+            return false;
+        }
+        Marble dstMarble = marble.adjMarbles[dir];
+        Point srcPoint = new Point(marble.getMarbleX(), marble.getMarbleY());
+        Point dstPoint = new Point(dstMarble.getMarbleX(), dstMarble.getMarbleY());
+        if(!playersHomes.containsKey(srcPoint) && playersHomes.containsKey(dstPoint)) {
+            if (playersHomes.get(dstPoint).getText() == marble.getPlayer().getText()) {
+                return false;
+            }
+        }
 
+        return true;
+    }
+
+    public boolean validMove() {
+        return listMap.containsKey(toXY);
     }
 
     public void getAllMoves() {
@@ -210,6 +228,8 @@ public class StarModel {
             listMap.clear();
         }
         Marble marble = marbles[fromXY.y][fromXY.x];
+        this.srcMarble = marbles[fromXY.y][fromXY.x];
+
         for (int dir = 0; dir < kDir; dir++) {
             if(regMove(marble, dir)) {
                 listMap.put(new Point(marble.adjMarbles[dir].getMarbleX(), marble.adjMarbles[dir].getMarbleY()), Color.WHITE);
@@ -225,6 +245,7 @@ public class StarModel {
 
     private void addingJumps(Marble marble) {
         Marble jumpToMarble;
+        Point currentPoint = new Point(marble.getMarbleX(), marble.getMarbleY());
         for(int dir = 0; dir < kDir; dir++) {
             if(canJump(marble, dir)) {
                 jumpToMarble = marble.adjMarbles[dir].adjMarbles[dir];
@@ -233,6 +254,13 @@ public class StarModel {
 
             }
         }
+
+        if(playersHomes.containsKey(currentPoint)) {
+            if(playersHomes.get(currentPoint).getText() == srcMarble.getPlayer().getText()) {
+                listMap.remove(currentPoint);
+            }
+        }
+
     }
 
     public List<Point> getMoveList() {
@@ -291,11 +319,13 @@ public class StarModel {
     }
 
     public void undoLastMove() {
+
         if(moveHistory.size() > 0) {
             MoveSnapshot snapshot = moveHistory.pop();
             this.fromXY = snapshot.getFromXY();
             this.toXY = snapshot.getToXY();
             this.state = snapshot.getState();
+
             marbles[fromXY.y][fromXY.x].setPlayer(marbles[toXY.y][toXY.x].getPlayer());
             marbles[fromXY.y][fromXY.x].setHasMarble(true);
 

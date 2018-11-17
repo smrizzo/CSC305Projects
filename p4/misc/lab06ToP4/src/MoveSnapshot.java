@@ -23,4 +23,5 @@ public class MoveSnapshot {
     public Piece getState() {
         return state;
     }
+
 }
