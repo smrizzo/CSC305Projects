@@ -15,6 +15,12 @@ public class StarModel {
     private HashMap<Point, Color> listMap = new HashMap<>();
     private Marble srcMarble;
     final static int kDir = 6;
+    static Integer triangle1Tracker = 10;
+    static Integer triangle2Tracker = 10;
+    static Integer triangle3Tracker = 10;
+    static Integer triangle4Tracker = 10;
+    static Integer triangle5Tracker = 10;
+    static Integer triangle6Tracker = 10;
 
     final static Piece PLAYER_1 = Player1Marble.getInstance();
     final static Piece PLAYER_2 = Player2Marble.getInstance();
@@ -88,26 +94,32 @@ public class StarModel {
                 mapForMarbles.get(i).setPlayer(Player4Marble.getInstance());
                 mapForMarbles.get(i).setHasMarble(true);
                 playersHomes.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player4Marble.getInstance());
+                dstTriangles.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player1Marble.getInstance());
             } else if((i >= 11 && i <= 14) || (i >= 24 && i <= 26) || (i >=36 && i <= 37) || i == 47) {
                 mapForMarbles.get(i).setPlayer(Player5Marble.getInstance());
                 mapForMarbles.get(i).setHasMarble(true);
                 playersHomes.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player5Marble.getInstance());
+                dstTriangles.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player2Marble.getInstance());
             } else if ((i >= 20 && i <= 23) || (i >= 33 && i <= 35) || (i >= 45 && i <= 46) || i == 56){
                 mapForMarbles.get(i).setPlayer(Player3Marble.getInstance());
                 mapForMarbles.get(i).setHasMarble(true);
                 playersHomes.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player3Marble.getInstance());
+                dstTriangles.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player6Marble.getInstance());
             } else if ((i == 66) || (i >= 76 && i <= 77) || (i >= 87 && i <= 89) || (i >= 99 && i <= 102)) {
                 mapForMarbles.get(i).setPlayer(Player6Marble.getInstance());
                 mapForMarbles.get(i).setHasMarble(true);
                 playersHomes.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player6Marble.getInstance());
+                dstTriangles.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player3Marble.getInstance());
             } else if ((i == 75) || (i >= 85 && i <= 86) || (i >= 96 && i <= 98) || (i >= 108 && i <= 111)) {
                 mapForMarbles.get(i).setPlayer(Player2Marble.getInstance());
                 mapForMarbles.get(i).setHasMarble(true);
                 playersHomes.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player2Marble.getInstance());
+                dstTriangles.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player5Marble.getInstance());
             } else if((i >= 112 && i <= 115) || (i >= 116 && i <= 118) || (i >= 119 && i <= 120) || i == 121) {
                 mapForMarbles.get(i).setPlayer(Player1Marble.getInstance());
                 mapForMarbles.get(i).setHasMarble(true);
                 playersHomes.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player1Marble.getInstance());
+                dstTriangles.put(new Point(mapForMarbles.get(i).getMarbleX(), mapForMarbles.get(i).getMarbleY()), Player4Marble.getInstance());
             }
         }
     }
@@ -189,7 +201,9 @@ public class StarModel {
         if(marble.adjMarbles[dir] == null || marble.adjMarbles[dir].adjMarbles[dir] == null){
             return false;
         }
+        Point srcPoint = new Point(marble.getMarbleX(), marble.getMarbleY());
         Point nextPoint = new Point(marble.adjMarbles[dir].adjMarbles[dir].getMarbleX(), marble.adjMarbles[dir].adjMarbles[dir].getMarbleY());
+
         if(marble.adjMarbles[dir] != null && !marble.adjMarbles[dir].getHasMarble()) {
             return false;
         } else if (marble.adjMarbles[dir] != null && marble.adjMarbles[dir].getHasMarble() &&
@@ -198,6 +212,16 @@ public class StarModel {
         } else if (marble.adjMarbles[dir].getHasMarble() && !marble.adjMarbles[dir].adjMarbles[dir].getHasMarble() &&
                 listMap.containsKey(nextPoint)) {
             return false;
+        } else if (dstTriangles.containsKey(srcPoint) && !dstTriangles.containsKey(nextPoint)) {
+            Piece dstPlayer = dstTriangles.get(srcPoint);
+            if((srcMarble.getPlayer() instanceof Player1Marble && dstPlayer instanceof Player1Marble) ||
+                    (srcMarble.getPlayer() instanceof Player2Marble && dstPlayer instanceof Player2Marble) ||
+                    (srcMarble.getPlayer() instanceof Player3Marble && dstPlayer  instanceof Player3Marble) ||
+                    (srcMarble.getPlayer() instanceof Player4Marble && dstPlayer instanceof Player4Marble) ||
+                    (srcMarble.getPlayer() instanceof Player5Marble && dstPlayer instanceof Player5Marble) ||
+                    (srcMarble.getPlayer() instanceof Player6Marble && dstPlayer instanceof Player6Marble)) {
+                return false;
+            }
         }
         return true;
     }
@@ -211,6 +235,19 @@ public class StarModel {
         Point dstPoint = new Point(dstMarble.getMarbleX(), dstMarble.getMarbleY());
         if(!playersHomes.containsKey(srcPoint) && playersHomes.containsKey(dstPoint)) {
             if (playersHomes.get(dstPoint).getText() == marble.getPlayer().getText()) {
+                return false;
+            }
+        }
+
+        if(dstTriangles.containsKey(srcPoint) && !dstTriangles.containsKey(dstPoint)) {
+            System.out.println("found move not in triangle");
+            Piece dstPlayer = dstTriangles.get(srcPoint);
+            if((srcMarble.getPlayer() instanceof Player1Marble && dstPlayer instanceof Player1Marble) ||
+                    (srcMarble.getPlayer() instanceof Player2Marble && dstPlayer instanceof Player2Marble) ||
+                    (srcMarble.getPlayer() instanceof Player3Marble && dstPlayer  instanceof Player3Marble) ||
+                    (srcMarble.getPlayer() instanceof Player4Marble && dstPlayer instanceof Player4Marble) ||
+                    (srcMarble.getPlayer() instanceof Player5Marble && dstPlayer instanceof Player5Marble) ||
+                    (srcMarble.getPlayer() instanceof Player6Marble && dstPlayer instanceof Player6Marble)) {
                 return false;
             }
         }
@@ -336,8 +373,6 @@ public class StarModel {
             }
             starChanged();
         }
-
-
     }
 
     public Marble[][] getMarbles() {

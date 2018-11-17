@@ -64,6 +64,10 @@ public class CCController implements ViewObserver{
                     pieceClicked = false;
                 }
 
+//                gotAllMoves = false;
+//                movePiece.execute();
+//                pieceClicked = false;
+
                 break;
 
             }
