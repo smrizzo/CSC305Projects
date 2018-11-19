@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.util.Random;
 
 public class Marble {
     public Marble[] adjMarbles = new Marble[6];
@@ -12,8 +11,6 @@ public class Marble {
     private Integer marbleID;
     private boolean hasMarble;
     private boolean pieceClicked = false;
-    //private Integer player;
-    Random rand = new Random();
 
     public Marble(Integer id, Integer y, Integer x, Piece player, boolean hasMarble) {
         this.marbleID = id;
@@ -49,6 +46,7 @@ public class Marble {
     public boolean getHasMarble() {
         return this.hasMarble;
     }
+
     public Integer getMarbleID() {
         return marbleID;
     }

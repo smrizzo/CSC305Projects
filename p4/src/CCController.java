@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.awt.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class CCController implements CCViewObserver{
 
@@ -14,6 +15,8 @@ public class CCController implements CCViewObserver{
     private boolean pieceClicked = false;
     protected boolean gotAllMoves = false;
     private boolean gameIsOver = false;
+    private Thread myModelThread;
+    private ReentrantLock lock = new ReentrantLock();
     //List<Point> listOfMoves;
     HashMap<Point, Color> listOfMoves;
 
@@ -26,7 +29,7 @@ public class CCController implements CCViewObserver{
         this.model = model;
         this.marbles = model.getMarbles();
         movePiece = new CCMove(this.model);
-        model.registerViewObserver(this);
+        model.registerCCViewObserver(this);
 
         for(int i = 0; i < numOfUI; i++) {
             starUIS.add(new StarUI(this, model ,keyName));
@@ -34,6 +37,10 @@ public class CCController implements CCViewObserver{
         for(int i = 0; i < numOfUI; i++) {
             starUIS.get(i).setFrameVisible(true);
         }
+
+        myModelThread = new Thread(model);
+        myModelThread.start();
+
     }
 
     public void addMarbleTracker(MarbleViewTracker marble) {
@@ -44,6 +51,12 @@ public class CCController implements CCViewObserver{
         if(!gameIsOver) {
             for(MarbleViewTracker marble: marbleViewTracker) {
                 if(doesContain(marble,x,y) && isPlayersTurn(marble.getPoint().x, marble.getPoint().y)) {
+                    lock.lock();
+                    try {
+
+                    } finally {
+                        lock.unlock();
+                    }
                     model.setFromXY(marble.getPoint().x, marble.getPoint().y);
                     model.getAllMoves();
 
@@ -68,9 +81,15 @@ public class CCController implements CCViewObserver{
 
 
     public void buttonClicked(String command) {
-        gotAllMoves = false;
-        pieceClicked = false;
-        movePiece.undo();
+        lock.lock();
+        try {
+            gotAllMoves = false;
+            pieceClicked = false;
+            movePiece.undo();
+        } finally {
+            lock.unlock();
+        }
+
     }
 
     public boolean isPlayersTurn(int x, int y) {

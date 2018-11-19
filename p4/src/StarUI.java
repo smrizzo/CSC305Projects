@@ -21,8 +21,8 @@ public class StarUI implements CCViewObserver{
     public StarUI(CCController controller, StarModel model, String name) {
         this.controller = controller;
         this.model = model;
-        model.registerViewObserver(this);
-        this.frame = new JFrame("Star's Hollow-" + name);
+        model.registerCCViewObserver(this);
+        this.frame = new JFrame("Chinese Checkers Game-" + name);
 
         ImageIcon myIcon  = new ImageIcon("./Images/undoButton.png");
         myImage = myIcon.getImage();
@@ -67,7 +67,6 @@ public class StarUI implements CCViewObserver{
     }
 
     public void undoButtonClicked(ActionEvent e) {
-        System.out.println("Button was clicked");
         controller.buttonClicked(e.getActionCommand());
     }
 

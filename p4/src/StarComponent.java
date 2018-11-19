@@ -36,7 +36,7 @@ public class StarComponent extends Component implements CompObserver {
         }
 
         g.setColor(colorUpdate);
-        g.drawString("Player " + model.getWinningPlayer().getText() + " Wins!!!", 100, 400);
+        g.drawString("Player " + model.getWinningPlayer().getText() + " Wins!!!", 20, 560);
     }
 
     public void paint(Graphics gIn)  {

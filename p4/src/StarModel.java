@@ -3,9 +3,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 
-public class StarModel {
+public class StarModel implements Runnable{
 
     private Marble[][] marbles = new Marble[17][25];
     private List<CCViewObserver> Observers = new ArrayList<>();
@@ -40,6 +42,10 @@ public class StarModel {
     private Point fromXY = new Point();
     private Point toXY = new Point();
     private Integer marbleID = 0;
+    private boolean done = false;
+
+    ReentrantLock lock = new ReentrantLock();
+    Condition condition = lock.newCondition();
 
     public StarModel() {
         initializeStar();
@@ -500,36 +506,74 @@ public class StarModel {
     }
 
     public void removeViewObserver(CCViewObserver o) {
-        int i = Observers.indexOf(o);
-        if(i >= 0) {
-            Observers.remove(i);
+        lock.lock();
+        try {
+            int i = Observers.indexOf(o);
+            if(i >= 0) {
+                Observers.remove(i);
+            }
+            condition.signalAll();
+        } finally {
+            lock.unlock();
         }
     }
 
     public void removeCompObserver(CompObserver o) {
-        int i = compObservers.indexOf(o);
-        if(i >= 0) {
-            compObservers.remove(i);
+
+        lock.lock();
+        try {
+            int i = compObservers.indexOf(o);
+            if(i >= 0) {
+                compObservers.remove(i);
+            }
+            condition.signalAll();
+        } finally {
+            lock.unlock();
         }
+
     }
 
-    public void registerViewObserver(CCViewObserver o) {
-        Observers.add(o);
+    public void registerCCViewObserver(CCViewObserver o) {
+        lock.lock();
+        try {
+            Observers.add(o);
+        } finally {
+            lock.unlock();
+        }
+
     }
 
     public void registerCompObserver(CompObserver o) {
-        compObservers.add(o);
+
+        lock.lock();
+        try {
+            compObservers.add(o);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public void notifyViewObservers() {
-        for(CCViewObserver o: Observers) {
-            o.updateStar(this);
+        lock.lock();
+        try {
+            for(CCViewObserver o: Observers) {
+                o.updateStar(this);
+            }
+        } finally {
+            lock.unlock();
         }
+
     }
     public void notifyCompObservers() {
-        for(CompObserver o: compObservers) {
-            o.updateComponent(this);
+        lock.lock();
+        try {
+            for(CompObserver o: compObservers) {
+                o.updateComponent(this);
+            }
+        } finally {
+            lock.unlock();
         }
+
     }
 
     public void starChanged() {
@@ -549,4 +593,29 @@ public class StarModel {
         return winningPlayer;
     }
 
+    public void shutDown() {
+        done = true;
+    }
+
+
+    @Override
+    public void run() {
+
+        while(!done) {
+            lock.lock();
+            try {
+                while(Observers.size() > 1) {
+                    condition.await();
+                }
+                shutDown();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                lock.unlock();
+            }
+
+        }
+
+    }
 }
