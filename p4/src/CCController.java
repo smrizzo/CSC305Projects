@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.awt.*;
 
-public class CCController implements ViewObserver{
+public class CCController implements CCViewObserver{
 
     private List<Ellipse2D> marbleShapes = new ArrayList<>();
     private List<MarbleViewTracker> marbleViewTracker = new ArrayList<>();
@@ -19,14 +19,8 @@ public class CCController implements ViewObserver{
 
     private CCMove movePiece;
 
-    private ActionHandler actions;
-
-
-
     private StarModel model;
     private Marble[][] marbles;
-    private ActionHandler action = new ActionHandler();
-
 
     public CCController(StarModel model, int numOfUI, String keyName) {
         this.model = model;
@@ -96,4 +90,6 @@ public class CCController implements ViewObserver{
         this.gameIsOver = m.getIfGameIsOver();
         movePiece = new CCMove(this.model);
     }
+
+
 }

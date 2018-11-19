@@ -135,7 +135,6 @@ public class ChessModel {
         pieces[fromX][fromY] = null;
         boardChanged();
 
-
     }
 
     public boolean moveAndtakePiece() throws CloneNotSupportedException {
