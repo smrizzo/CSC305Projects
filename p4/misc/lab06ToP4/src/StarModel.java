@@ -15,12 +15,14 @@ public class StarModel {
     private HashMap<Point, Color> listMap = new HashMap<>();
     private Marble srcMarble;
     final static int kDir = 6;
-    static Integer triangle1Tracker = 10;
-    static Integer triangle2Tracker = 10;
-    static Integer triangle3Tracker = 10;
-    static Integer triangle4Tracker = 10;
-    static Integer triangle5Tracker = 10;
-    static Integer triangle6Tracker = 10;
+    private static Integer triangle1Tracker = 10;
+    private static Integer triangle2Tracker = 10;
+    private static Integer triangle3Tracker = 10;
+    private static Integer triangle4Tracker = 10;
+    private static Integer triangle5Tracker = 10;
+    private static Integer triangle6Tracker = 10;
+    private boolean gameIsOver = false;
+    private Piece winningPlayer;
 
     final static Piece PLAYER_1 = Player1Marble.getInstance();
     final static Piece PLAYER_2 = Player2Marble.getInstance();
@@ -240,7 +242,6 @@ public class StarModel {
         }
 
         if(dstTriangles.containsKey(srcPoint) && !dstTriangles.containsKey(dstPoint)) {
-            System.out.println("found move not in triangle");
             Piece dstPlayer = dstTriangles.get(srcPoint);
             if((srcMarble.getPlayer() instanceof Player1Marble && dstPlayer instanceof Player1Marble) ||
                     (srcMarble.getPlayer() instanceof Player2Marble && dstPlayer instanceof Player2Marble) ||
@@ -313,9 +314,7 @@ public class StarModel {
     }
 
     public void setFromXY(int x, int y) {
-        System.out.println("x: " + x + ", y :" + y);
         fromXY.setLocation(x, y);
-        System.out.println("after x: " + fromXY.x + ", after y :" + fromXY.y);
     }
 
     public void setToXY(int x, int y) {
@@ -338,19 +337,139 @@ public class StarModel {
         }
     }
 
-    public void addToMoveHistory() {
-        moveHistory.push(new MoveSnapshot(new Point(fromXY.x, fromXY.y), new Point(toXY.x, toXY.y), getState()));
+    public void addToMoveHistory(boolean leftHome, boolean enteredTri) {
+        moveHistory.push(new MoveSnapshot(new Point(fromXY.x, fromXY.y), new Point(toXY.x, toXY.y), getState(), leftHome, enteredTri));
+    }
+
+    public boolean hasLeftHome() {
+        this.srcMarble = marbles[fromXY.y][fromXY.x];
+        Point srcPoint = new Point(fromXY.x, fromXY.y);
+        Point dstPoint = new Point(toXY.x, toXY.y);
+        if(playersHomes.containsKey(srcPoint) && !playersHomes.containsKey(dstPoint)) {
+//            if (srcMarble.getPlayer().getText() == playersHomes.get(srcPoint).getText()) {
+//                return true;
+//            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean enteredDstTriangle() {
+        this.srcMarble = marbles[fromXY.y][fromXY.x];
+        Point srcPoint = new Point(fromXY.x, fromXY.y);
+        Point dstPoint = new Point(toXY.x, toXY.y);
+        if(!dstTriangles.containsKey(srcPoint) && dstTriangles.containsKey(dstPoint)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void subMarbleCount(Piece piece) {
+        if(piece instanceof Player1Marble) {
+            triangle1Tracker--;
+            System.out.println("sub count:" + triangle1Tracker);
+        } else if(piece instanceof Player2Marble) {
+            triangle2Tracker--;
+        } else if(piece instanceof Player3Marble) {
+            triangle3Tracker--;
+        } else if(piece instanceof Player4Marble) {
+            triangle4Tracker--;
+        } else if(piece instanceof Player5Marble) {
+            triangle5Tracker--;
+        } else if(piece instanceof Player6Marble) {
+            triangle6Tracker--;
+        }
+    }
+
+    public void addMarbleCount(Piece piece) {
+        if(piece instanceof Player1Marble) {
+            triangle1Tracker++;
+            System.out.println("add count:" + triangle1Tracker);
+        } else if(piece instanceof Player2Marble) {
+            triangle2Tracker++;
+        } else if(piece instanceof Player3Marble) {
+            triangle3Tracker++;
+        } else if(piece instanceof Player4Marble) {
+            triangle4Tracker++;
+        } else if(piece instanceof Player5Marble) {
+            triangle5Tracker++;
+        } else if(piece instanceof Player6Marble) {
+            triangle6Tracker++;
+        }
+    }
+
+    public Integer getPieceCount(Piece piece) {
+        if(piece instanceof Player1Marble) {
+            return triangle1Tracker;
+        } else if(piece instanceof Player2Marble) {
+            return triangle2Tracker;
+        } else if(piece instanceof Player3Marble) {
+            return triangle3Tracker;
+        } else if(piece instanceof Player4Marble) {
+            return triangle4Tracker;
+        } else if(piece instanceof Player5Marble) {
+            return triangle5Tracker;
+        } else {
+            return triangle6Tracker;
+        }
+
+    }
+
+    public boolean moveWonGame(Piece triangleEntered) {
+        if(getPieceCount(triangleEntered) < 10) {
+            return false;
+        }
+
+        if(getPieceCount(triangleEntered) == 10) {
+            for(Point point: playersHomes.keySet()) {
+                if(playersHomes.get(point).getText() == triangleEntered.getText()) {
+                    if(marbles[point.y][point.x].getPlayer().getText() == dstTriangles.get(point).getText()) {
+                        winningPlayer = marbles[point.y][point.x].getPlayer();
+                        System.out.println("Game was won and is not over");
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public void regularMove() {
+        Point srcPoint = new Point(fromXY.x, fromXY.y);
+        Point dstPoint = new Point(toXY.x, toXY.y);
+        boolean leavingHome = false;
+        boolean enteredTri = false;
+        Piece pieceThatLeft;
+        Piece pieceThatEntered = null;
+        if(hasLeftHome()) {
+            pieceThatLeft = playersHomes.get(srcPoint);
+            leavingHome = true;
+            subMarbleCount(pieceThatLeft);
+        } else if (enteredDstTriangle()) {
+            pieceThatEntered = playersHomes.get(dstPoint);
+            enteredTri = true;
+            addMarbleCount(pieceThatEntered);
+        }
+
 
         marbles[toXY.y][toXY.x].setPlayer(marbles[fromXY.y][fromXY.x].getPlayer());
         marbles[toXY.y][toXY.x].setHasMarble(true);
 
         marbles[fromXY.y][fromXY.x].setPlayer(EmptyBoardSlot.getInstance());
         marbles[fromXY.y][fromXY.x].setHasMarble(false);
-        addToMoveHistory();
-        setPlayersTurn();
+        addToMoveHistory(leavingHome, enteredTri);
+
+        if(enteredTri) {
+            if(moveWonGame(pieceThatEntered)) {
+                gameIsOver = true;
+            }
+        }
+
+        if(!gameIsOver) {
+            setPlayersTurn();
+        }
         starChanged();
 
     }
@@ -362,6 +481,13 @@ public class StarModel {
             this.fromXY = snapshot.getFromXY();
             this.toXY = snapshot.getToXY();
             this.state = snapshot.getState();
+
+            if(snapshot.isLeftHome()) {
+                addMarbleCount(marbles[toXY.y][toXY.x].getPlayer());
+            } else if (snapshot.isEnteredAHome()) {
+                subMarbleCount(playersHomes.get(toXY));
+
+            }
 
             marbles[fromXY.y][fromXY.x].setPlayer(marbles[toXY.y][toXY.x].getPlayer());
             marbles[fromXY.y][fromXY.x].setHasMarble(true);
@@ -421,5 +547,12 @@ public class StarModel {
         return mapForMarbles;
     }
 
+    public boolean getIfGameIsOver() {
+        return gameIsOver;
+    }
+
+    public Piece getWinningPlayer() {
+        return winningPlayer;
+    }
 
 }

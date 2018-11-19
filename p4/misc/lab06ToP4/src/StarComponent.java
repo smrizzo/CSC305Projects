@@ -9,8 +9,9 @@ public class StarComponent extends Component implements CompObserver {
     private Marble[][] marble;
     private Color allMovesColor = Color.WHITE;
     private Color[] colors = {Color.RED, Color.pink, Color.BLUE, Color.GREEN, Color.DARK_GRAY, Color.ORANGE};
-    private PlayerTriangle tri;
+//    private PlayerTriangle tri;
     //private List<Point> listOfMoves;
+    private boolean gameIsOver;
     private HashMap<Point, Color> listOfMoves;
 
     public StarComponent(CCController controller, StarModel model) {
@@ -35,10 +36,8 @@ public class StarComponent extends Component implements CompObserver {
 
 
         if(model.getState().getText() == '1') {
-            //tri = new Player1Triangle(gIn, componentW, componentH);
             colorUpdate = colors[0];
         } else if(model.getState().getText() == '2') {
-            //tri = new Player2Triangle(gIn, componentW, componentH);
             colorUpdate = colors[1];
         } else if(model.getState().getText() == '3'){
             colorUpdate = colors[2];
@@ -58,6 +57,13 @@ public class StarComponent extends Component implements CompObserver {
         g.setFont(new Font("TimesRoman", Font.BOLD, 30));
         g.setColor(Color.BLACK);
         g.drawString("Player " + model.getState().getText(), 455, 50);
+
+        if(!gameIsOver) {
+
+            g.setFont(new Font("TimesRoman", Font.BOLD, 35));
+            g.setColor(colorUpdate);
+            g.drawString("Player " + model.getState().getText() + " Wins!!!", 360, 100);
+        }
 
 
         for(int y = 0; y < 17; y++) {
@@ -112,6 +118,7 @@ public class StarComponent extends Component implements CompObserver {
     public void updateComponent(StarModel m) {
         this.model = m;
         this.marble = m.getMarbles();
+        this.gameIsOver = m.getIfGameIsOver();
         //this.listOfMoves = model.getMoveList();
         this.listOfMoves = model.getListMap();
     }

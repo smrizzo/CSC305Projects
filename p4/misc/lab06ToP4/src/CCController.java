@@ -13,6 +13,7 @@ public class CCController implements ViewObserver{
     protected boolean initialClick = false;
     private boolean pieceClicked = false;
     protected boolean gotAllMoves = false;
+    private boolean gameIsOver = false;
     //List<Point> listOfMoves;
     HashMap<Point, Color> listOfMoves;
 
@@ -46,30 +47,27 @@ public class CCController implements ViewObserver{
     }
 
     public void foundClick(int x, int y) {
-        for(MarbleViewTracker marble: marbleViewTracker) {
-            if(doesContain(marble,x,y) && isPlayersTurn(marble.getPoint().x, marble.getPoint().y)) {
-                model.setFromXY(marble.getPoint().x, marble.getPoint().y);
-                model.getAllMoves();
+        if(!gameIsOver) {
+            for(MarbleViewTracker marble: marbleViewTracker) {
+                if(doesContain(marble,x,y) && isPlayersTurn(marble.getPoint().x, marble.getPoint().y)) {
+                    model.setFromXY(marble.getPoint().x, marble.getPoint().y);
+                    model.getAllMoves();
 
-                gotAllMoves = true;
-                pieceClicked = true;
-                break;
+                    gotAllMoves = true;
+                    pieceClicked = true;
+                    break;
 
-            } else if (doesContain(marble, x, y) && !isPlayersTurn(marble.getPoint().x, marble.getPoint().y) && pieceClicked) {
-                model.setToXY(marble.getPoint().x, marble.getPoint().y);
+                } else if (doesContain(marble, x, y) && !isPlayersTurn(marble.getPoint().x, marble.getPoint().y) && pieceClicked) {
+                    model.setToXY(marble.getPoint().x, marble.getPoint().y);
 
-                if(model.validMove()) {
-                    gotAllMoves = false;
-                    movePiece.execute();
-                    pieceClicked = false;
+                    if(model.validMove()) {
+                        gotAllMoves = false;
+                        movePiece.execute();
+                        pieceClicked = false;
+                    }
+                    break;
+
                 }
-
-//                gotAllMoves = false;
-//                movePiece.execute();
-//                pieceClicked = false;
-
-                break;
-
             }
         }
     }
@@ -96,6 +94,7 @@ public class CCController implements ViewObserver{
     public void updateStar(StarModel m) {
         this.model = m;
         this.marbles = m.getMarbles();
+        this.gameIsOver = m.getIfGameIsOver();
         movePiece = new CCMove(this.model);
     }
 }

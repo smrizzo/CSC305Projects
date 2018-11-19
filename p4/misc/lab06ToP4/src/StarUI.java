@@ -75,7 +75,6 @@ public class StarUI implements ViewObserver{
 
     private void notifyLocation(int x, int y) {
             controller.foundClick(x, y);
-//        System.out.println("x: " + (int)((x - 25.0) / (componentW/32)) + ", " + "y: " +  (int)((y - 10.0)/(componentH/18)));
 
     }
 
