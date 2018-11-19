@@ -6,7 +6,9 @@ public class Marble {
     private Integer y;
     private double pixelsHeight;
     private double pixelsWidth;
+
     private Piece player;
+
     private Color color;
     private Integer marbleID;
     private boolean hasMarble;

@@ -10,6 +10,9 @@ import java.util.concurrent.locks.ReentrantLock;
 public class StarModel implements Runnable{
 
     private Marble[][] marbles = new Marble[17][25];
+
+
+
     private List<CCViewObserver> Observers = new ArrayList<>();
     private List<CompObserver> compObservers = new ArrayList<>();
     private Stack<MoveSnapshot> moveHistory = new Stack<>();
