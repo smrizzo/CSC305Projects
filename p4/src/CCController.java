@@ -51,17 +51,15 @@ public class CCController implements CCViewObserver{
         if(!gameIsOver) {
             for(MarbleViewTracker marble: marbleViewTracker) {
                 if(doesContain(marble,x,y) && isPlayersTurn(marble.getPoint().x, marble.getPoint().y)) {
-                    lock.lock();
-                    try {
 
-                    } finally {
-                        lock.unlock();
-                    }
                     model.setFromXY(marble.getPoint().x, marble.getPoint().y);
-                    model.getAllMoves();
+                    if(model.hasMoves()) {
+                        model.getAllMoves();
+                        gotAllMoves = true;
+                        pieceClicked = true;
+                    }
 
-                    gotAllMoves = true;
-                    pieceClicked = true;
+
                     break;
 
                 } else if (doesContain(marble, x, y) && !isPlayersTurn(marble.getPoint().x, marble.getPoint().y) && pieceClicked) {

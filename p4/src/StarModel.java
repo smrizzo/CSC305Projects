@@ -10,13 +10,11 @@ import java.util.concurrent.locks.ReentrantLock;
 public class StarModel implements Runnable{
 
     private Marble[][] marbles = new Marble[17][25];
-
-
-
     private List<CCViewObserver> Observers = new ArrayList<>();
     private List<CompObserver> compObservers = new ArrayList<>();
     private Stack<MoveSnapshot> moveHistory = new Stack<>();
     private List<Point> moveList = new ArrayList<>();
+    private List<Point> backUpMoveList = new ArrayList<>();
     private HashMap<Point, Color> listMap = new HashMap<>();
     private Marble srcMarble;
     final static int kDir = 6;
@@ -267,6 +265,26 @@ public class StarModel implements Runnable{
 
     public boolean validMove() {
         return listMap.containsKey(toXY);
+    }
+
+    public boolean hasMoves() {
+
+        Marble OriginalMarble  = marbles[fromXY.y][fromXY.x];
+        Point originalPoint = new Point(fromXY.x, fromXY.y);
+        for(Marble marble: mapForMarbles.values()) {
+            if(marble.getPlayer().getText() == OriginalMarble.getPlayer().getText()) {
+                this.fromXY.x = marble.getMarbleX();
+                this.fromXY.y = marble.getMarbleY();
+                getAllMoves();
+                if(listMap.size() > 0) {
+                    this.fromXY.x = originalPoint.x;
+                    this.fromXY.y = originalPoint.y;
+                    return true;
+                }
+            }
+        }
+        setPlayersTurn();
+        return false;
     }
 
     public void getAllMoves() {

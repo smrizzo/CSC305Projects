@@ -47,11 +47,8 @@ public class StarComponent extends Component implements CompObserver {
         double minDimension = Math.min(componentH, componentW);
         Color colorUpdate;
 
-
         g.setColor(Color.GRAY);
         g.fillRect(0, 0, size.width, size.height);
-
-
 
         if(model.getState().getText() == '1') {
             colorUpdate = colors[0];
@@ -77,11 +74,7 @@ public class StarComponent extends Component implements CompObserver {
         g.drawString("Player " + model.getState().getText(), 455, 50);
 
         if(gameIsOver) {
-
             g.setFont(new Font("TimesRoman", Font.BOLD, 35));
-
-//            g.setColor(colorUpdate);
-//            g.drawString("Player " + model.getState().getText() + " Wins!!!", 20, 560);
             gameIsWon(gIn);
 
         }
