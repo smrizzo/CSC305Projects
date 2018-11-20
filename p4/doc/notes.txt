@@ -1,47 +1,13 @@
 HAVES:
 
-My program is able to handle mutiple arguments as requested but cannot put same sessionID in same program arguments for example:
+I currently have everything working still for chess that I did in p3.
+I also have implemented everything for chinese checkers in p4.
 
-chess HOST1,PORT1,SESSIONID1 HOST1,PORT1,SESSIONID1 
+HAVE NOTS:
 
-The sessionID's have to be different as if trying to connect to another game running.
-----------------
-example commands arguments for my game
+I have all the functionality of chess and chinese checkers for local play, however I feel my design needs to be improved.
 
-chess white
-chess black
-chess white black
-chess white HOST,PORT,SESSIONID black
-chess white black kibbitzer
-chess white black kibbitzer HOST,PORT,SESSIONID
+I implemented chinese checkers with the same abstract Piece class that chess used, but other than that they are separeate.
 
-------------------
-Program works with multiple boards local and or network play.
-Can also play with either clicking on board or using key's
-
-To quit a network or local game in GUI mode you need to press the key, q to quit that game.
-If don't do this it wont shut down correctly.
-
---------------
-Game does promote pawns correctly but after pawn makes it to the other side you have to promote that pawn as right now and click the piece you want.
-Pawn promotion does work with keys:
-
-Example for pawn promotion using keyboard:
-
-a2a8 - will move the pawn to the other side
-
-To promote destination must be a0,b0,c0,d0 depending on the piece you want
-a0-Queen
-b0-rook
-c0-Bishop
-d0-Knight
-
-so example of promotion after made from a2a8
-
-a8a0-will turn pawn into queen
-
-Missing:
-
-I am currently not able to do textMode. I have it working for graphics window so it does it for free but I forgot about adding in textMode as a feature and testing to make sure it works.
-
-I will need to make improvements on design for p4 if still building on chessgame
+A better design would be to have both chess and chinese checkers extending from same View class, Controller Class, Model Class, and maybe more.
+That will be something I will improve on in the future. 
