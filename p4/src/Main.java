@@ -8,22 +8,20 @@ public class Main {
     public int whiteBoardCount;
     public int blackBoardCount;
     public int kibbitzerBoardCount;
-    boolean remoteGame = false;
-    boolean localGame = false;
-    boolean chineseCheckersGame = false;
-    List<ChessController> myControllers = new ArrayList<>();
-    List<CCController> myCCControllers = new ArrayList<>();
-    HashMap<String, Integer> myMap = new HashMap<>();
+    private boolean remoteGame = false;
+    private boolean localGame = false;
+    private boolean chineseCheckersGame = false;
+    private List<ChessController> myControllers = new ArrayList<>();
+    private List<CCController> myCCControllers = new ArrayList<>();
+    private HashMap<String, Integer> myMap = new HashMap<>();
     public String[] serverCredentials;
     public List<String[]> listOfCredentials = new ArrayList<>();
     public HashMap<Integer, ChessController> mapOfCredentials = new HashMap<>();
 
-
     private static void usage() {
-        System.out.println("Usage:  java Main (test | chess white | chess black | chess white/black kibbitzer | chess 18.223.24.219,6002,MySessionID)");
+        System.out.println("Usage:  java Main (test | chess white | chess black | chess white/black kibbitzer | cch one two etc.. | chess 18.223.24.219,6002,MySessionID)");
         System.exit(1);
     }
-
 
     public int parseArguments(String[] args, int index) {
 
@@ -96,7 +94,7 @@ public class Main {
         }
 
         Main main = new Main();
-
+        main.welcome();
         if ("test".equals(args[0])) {
             (new MyTest()).runTests();
             System.exit(0);
@@ -113,7 +111,6 @@ public class Main {
             }
 
         }
-
 
         if(main.chineseCheckersGame) {
             for(String key: main.myMap.keySet()) {
