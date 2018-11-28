@@ -6,9 +6,9 @@
 \usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of %the figure
 \usepackage{wrapfig} % Allows in-line images such as the example fish picture
 \usepackage[top=.20in]{geometry}
-\usepackage[pdftitle = {Cal Poly CSC 305}, pdfauthor = {Matthew Jimenez}, pdfsubject = {Lab 06: Hollow Star}, colorlinks = true, urlcolor = blue]{hyperref}
+\usepackage[pdftitle = {Cal Poly CSC 305}, pdfauthor = {Scott Rizzo}, pdfsubject = {Lab 7: One Night in Bangkok}, colorlinks = true, urlcolor = blue]{hyperref}
 
-\title{Lab 06 Design}
+\title{Lab 07 Design}
 \author{Scott Rizzo}
 \date{\today}
 
@@ -17,25 +17,22 @@
 
 \section{Class Diagram}
 \begin{figure}[H]
-\center{\includegraphics[width=0.8\linewidth]{lab07ClassDiagram}}
+\center{\includegraphics[width=0.9\linewidth]{lab07ClassDiagram}}
 \caption{Class Diagram}
 \label{fig:Hollow Star}
 \end{figure}
 
 \section{Class Responsibilities}
-\subsection{Model}
-The \texttt{model} is responsible for initializing the Circle objects in a data structure with there appropriate positions. It is a thread and will have multiple StarUI's associated with it and when it changes a random circle's color it notifies the StarComponents first then the StarUI's using the observer pattern to change.
+\subsection{Calculator}
+The \texttt{Calculator} is responsible for calculating the number of factors of a given number.
 
-\subsection{StarUI}
-\texttt{StarUI} is responsible for adding the content of each each StarComponent to the screen. It also handles listening for when a screen is exited to invoke the appropriate methods.
+\subsection{Result}
+\texttt{Result} is responsible for incrementing specific AtomicInteger variables whenever certain methods are invoked.
 
-\subsection{StarComponent}
-The \texttt{StarComponent} is responsible for displaying and sizing each circle in its appropriate location based on where it's located in the data structure.
+\subsection{OneNightInBangkok}
+The \texttt{OneNightInBangkok} is responsible for invoking certain methods in the Result class based on number of factors returned by Calculator class of a number.
 
-\subsection{Circle}
-The \texttt{Circle} class is responsible holding the data associated with the circles position and color. It also has a method to convert into pixels but I could possible encapsulate that somewhere else.
-
-
-
+\subsection{Main}
+The \texttt{Main} class is responsible for taking command line arguments and based on those arguments run the program. In main for this lab was able to stumble upon something called Executors class, and ExecutorService interface which extends Executor interface. Using a method of Executors I was able to create a thread pool with the threads given in command line arguments. While looping through the appropriate amount of values based on what was given for the range in arguments I invoke the execute method giving it the OneNightInBangkok object to add to the queue in the thread pool. By the invoking another method which says while tasks(OneNightInBangkok's) are not done keep waiting, and when they are done shutdown and print results. 
 
 \end{document}

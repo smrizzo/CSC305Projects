@@ -3,6 +3,7 @@ import other.Results;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     private Integer threadCount = 0;
@@ -27,10 +28,11 @@ public class Main {
         return finishPointInRange;
     }
 
-    public static void main(String [] args) {
+    public static void main(String [] args)  {
         Main main = new Main();
         Results result = new Results();
         ExecutorService executor;
+        boolean done = false;
 
         if(args.length < 1) {
             main.usage();
@@ -48,7 +50,14 @@ public class Main {
 
         executor.shutdown();
 
-        while(!executor.isTerminated()) { }
+        try {
+            if(!executor.awaitTermination(3, TimeUnit.MINUTES)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         result.printResults();
 
 
