@@ -1,0 +1,23 @@
+Project 5 Notes
+
+HAVES:========================
+My p5 program currently supports all the command linen arguments that were requested.
+It also will still play the game as before in project 4 if no robots are given.
+
+
+
+HAVE NOTS:====================
+1)
+Currently when playing the game with robots I have a bug where instead of them going to there 
+destination triangle which is across from them, for example:
+Player 1 would go to Player 4, but right now it is Player 1 is going to 5.
+This is something I would need to fix in a update of the game.
+
+2) 
+UNDOMOVE is not supported when playing with robots as of right now. It works great without robots.
+With all the other work I had to do I was unable to support this feature but it will also be added
+in a update for the game.
+
+3)There could be more but for now this is all I found.
+
+Thank You
